@@ -5,7 +5,7 @@ const Class = require('../model/class')
 const Report = require('../model/report')
 
 const updateInfo = (req, res) => {
-    const {mail} = req.payload;
+    const {mail} = req.body;
     const {name, phoneNumber, password} = req.body;
     if(!name) return res.status(400).json({message: "Name is required"});
     if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
@@ -68,6 +68,8 @@ const createStudent = (req, res) => {
 
         return res.status(200).json({message: 'success'});
     })
+    // let students = req.body;
+    // return res.status(200).json(students[1]);
 }
 
 const createLecturer = (req,res) =>{
@@ -92,9 +94,11 @@ const createLecturer = (req,res) =>{
     })
 }
 
-const deleteStudent = (req,res) => {
+const deleteStudent = async (req,res) => {
     const {mail} = req.body;
 
+    let std_check = await Student.findOne({mail}).exec();
+    if(!std_check) return res.status(400).json({message:'Student not found'});
     Student.findOneAndDelete({mail}, (err, resp) => {
         if(err) return res.status(400).json(err);
 
@@ -102,8 +106,11 @@ const deleteStudent = (req,res) => {
     });
 }
 
-const deleteLecturer = (req, res) => {
+const deleteLecturer = async (req, res) => {
     const { mail } = req.body;
+
+    let lec_check = await Lecturer.findOne({mail}).exec();
+    if(!lec_check) return res.status(400).json({message:'Lecturer not found'});
 
     Lecturer.findOneAndRemove({ mail }, (err, resp) => {
         if (err) return res.status(400).json(err);

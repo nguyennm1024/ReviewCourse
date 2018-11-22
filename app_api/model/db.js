@@ -12,4 +12,4 @@ require('./class');
 require('./lecturer');
 require('./report');
 require('./student');
-require('./seed')
+//require('./seed')
