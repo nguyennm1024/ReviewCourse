@@ -11,11 +11,11 @@ const findById = async (id, callback) => {
     try {
         let person;
 
-        if(!person) person = await Admin.findById(id).exec();
+        if(!person) person = await Admin.findOne(id).exec();
 
-        if(!person) person = await Student.findById(id).exec();
+        if(!person) person = await Student.findOne(id).exec();
 
-        if(!person) person = await Lecturer.findById(id).exec();
+        if(!person) person = await Lecturer.findOne(id).exec();
 
         if(callback) return callback(null, person);
         return person
@@ -29,11 +29,11 @@ const findByMail = async (mail, callback) => {
     try {
         let person;
 
-        if(!person) person = await Admin.findById({mail}).exec();
+        if(!person) person = await Admin.findOne({mail}).exec();
 
-        if(!person) person = await Student.findById({mail}).exec();
+        if(!person) person = await Student.findOne({mail}).exec();
 
-        if(!person) person = await Lecturer.findById({mail}).exec();
+        if(!person) person = await Lecturer.findOne({mail}).exec();
 
         if(callback) return callback(null, person);
         return person

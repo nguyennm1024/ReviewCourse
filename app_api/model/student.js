@@ -14,7 +14,7 @@ const extend = (Schema, obj) => (
     //admin provide
     MSSV: {type: String, required: true},
     name: {type: String, required: true},
-    birth: {type: Date, required: true},
+    birth: {type: Date, default: Date.now()},
     classRoom: {type: String, required: true},
 
     //user manage
