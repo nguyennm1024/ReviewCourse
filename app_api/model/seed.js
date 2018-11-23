@@ -14,19 +14,13 @@ const admins = [{
 }] 
 
 const classes = [{
-    class_id: '123423',
     subject_id:'3453432',
     semester_id: 3,
-    lecturer_id:'234234',
-    listStudent: ['23423', '234325212'],
     name:'Phat trien ung dung web'
 },
 {
-    class_id: '3453345',
     subject_id:'8678',
     semester_id: 4,
-    lecturer_id:'234234',
-    listStudent: ['23423', '234325212'],
     name:'Tri tue nhan tao'
 }]
 

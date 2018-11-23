@@ -5,8 +5,8 @@ const { Schema } = mongoose;
 const classSchema = new Schema({
     subject_id:{type: String},
     semester_id :{type: Number},
-    lecturer_id:{type:String},
-    listStudent: {type: [String]},
+    lecturer_id:{type:Schema.Types.ObjectId, ref:"lecturer"},
+    listStudent: [{type: Schema.Types.ObjectId, ref:'student'}],
     name:{type: String}
 });
 

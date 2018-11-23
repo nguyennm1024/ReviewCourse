@@ -21,7 +21,7 @@ const extend = (Schema, obj) => (
     avatar: {type: String},
     phoneNumber: {type: String},
     semester_id: {type: Number, required: true},
-    classRegistered:{type: [String], default: []}
+    classRegistered:[{type: Schema.Types.ObjectId, ref: "class"}]
 });
 
 module.exports = mongoose.model(name,studentSchema);
