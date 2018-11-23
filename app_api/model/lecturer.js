@@ -9,11 +9,11 @@ const extend = (Schema, obj) => (
       Object.assign({}, Schema.obj, obj)
     )
   );
-const lecturerSchema = extend(PersonSchema,{
+const lecturerSchema = PersonSchema.discriminator(name,new Schema({
     birthday: {type: Date},
     phoneNumber: {type: String, require},
     vnumail: {type: String},
     note :{type: String, default:''}
-});
+}, {discriminatorKey: '_type'}));
 
-module.exports = mongoose.model(name, lecturerSchema);
+module.exports =lecturerSchema;

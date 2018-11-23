@@ -63,6 +63,9 @@ const createStudent = (req, res) => {
     newStudent.semester_id = semester_id;
     newStudent.classRegistered = classRegistered;
 
+    //add type
+    newStudent.role = 'student';
+
     newStudent.save(e => {
         if(e) return res.status(500).json(e);
 
@@ -86,6 +89,8 @@ const createLecturer = (req,res) =>{
     newLecturer.phoneNumber = phoneNumber;
     newLecturer.vnumail = vnumail;
     newLecturer.note = note;
+
+    newLecturer.role = 'lecturer';
 
     newLecturer.save(e => {
         if(e) return res.status(500).json(e);

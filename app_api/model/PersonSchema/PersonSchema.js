@@ -7,8 +7,9 @@ const jwt = require('jsonwebtoken');
 const PersonSchema = new Schema({
     mail: {type : String, required: true, default:'nguyennm1024@gmail.com'},
     password: {type: String, required: true},
-    _hashAlready: {type: Boolean, default: false}
-}, {discriminatorKey: '_type'});
+    _hashAlready: {type: Boolean, default: false},
+    role: {type: String}
+});
 
 PersonSchema.pre('save', () => {
     let self = this;
@@ -52,4 +53,4 @@ const extend = (Schema, obj) => (
     )
 );
 
-module.exports = PersonSchema;
+module.exports = mongoose.model('PersonSchema',PersonSchema);

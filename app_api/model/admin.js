@@ -10,9 +10,9 @@ const extend = (Schema, obj) => (
     )
   );
 
-const adminSchema = extend(PersonSchema,{
+const adminSchema = PersonSchema.discriminator(name,new Schema ({
     name: {type: String, required: true},
     phoneNumber:{type: String, required: true}
-});
+},{discriminatorKey: '_type'}));
 
-module.exports = mongoose.model(name, adminSchema);
+module.exports = adminSchema;

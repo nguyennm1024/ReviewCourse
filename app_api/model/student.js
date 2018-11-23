@@ -10,7 +10,7 @@ const extend = (Schema, obj) => (
     )
   );
 
-  const studentSchema = extend(PersonalSchema, {
+  const studentSchema = PersonalSchema.discriminator(name,new Schema({
     //admin provide
     MSSV: {type: String, required: true},
     name: {type: String, required: true},
@@ -22,6 +22,6 @@ const extend = (Schema, obj) => (
     phoneNumber: {type: String},
     semester_id: {type: Number, required: true},
     classRegistered:{type: [String], default: []}
-});
+},{discriminatorKey: '_type'}));
 
-module.exports = mongoose.model(name, studentSchema);
+module.exports = studentSchema;

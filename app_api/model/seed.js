@@ -3,12 +3,14 @@ const Student = require('./student')
 const Lecturer = require('./lecturer')
 const Class = require('./class')
 const Report = require('./report')
+const PersonSchema = require('./PersonSchema/PersonSchema')
 
 const admins = [{
     mail:"admin@vnu.edu.vn",
     password:"123",
     name:"nguyen",
-    phoneNumber:"123456"
+    phoneNumber:"123456",
+    role:"admin"
 }] 
 
 const classes = [{
@@ -41,14 +43,16 @@ const students = [{
     name:'nguyen',
     birth: new Date(2000,1,1),
     classRoom:'K61-C-CLC',
-    semester_id: 5
+    semester_id: 5,
+    role:"student"
 }]
 
 const lecturers = [{
     mail: 'thanhld@vnu.edu.vn',
     password:'123',
     phoneNumber:'0981999999',
-    note:'Web dev teacher'
+    note:'Web dev teacher',
+    role:"lecturer"
 }]
 createSeed();
 
