@@ -3,14 +3,14 @@ const Student = require('./student')
 const Lecturer = require('./lecturer')
 const Class = require('./class')
 const Report = require('./report')
-const PersonSchema = require('./PersonSchema/PersonSchema')
+//const PersonSchema = require('./PersonSchema/PersonSchema')
 
 const admins = [{
     mail:"admin@vnu.edu.vn",
     password:"123",
     name:"nguyen",
-    phoneNumber:"123456",
-    role:"admin"
+    phoneNumber:"23456",
+    role: "admin"
 }] 
 
 const classes = [{

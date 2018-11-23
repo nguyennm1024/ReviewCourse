@@ -9,5 +9,6 @@ route.post('/createStudent', adminCtrl.createStudent);
 route.post('/createLecturer', adminCtrl.createLecturer);
 route.post('/deleteStudent', adminCtrl.deleteStudent)
 route.post('/deleteLecturer', adminCtrl.deleteLecturer);
+route.post('/allClass', adminCtrl.allClass);
 
 module.exports = route;

@@ -124,10 +124,20 @@ const deleteLecturer = async (req, res) => {
     });
 }
 
+const allClass = (req, res) => {
+    const {semester_id} = req.body;
+    Class.find({semester_id}, (err, listClass) =>{
+        if(err) return res.status(400).json(err);
+
+        return res.status(400).json(listClass);
+    })
+}
+
 module.exports = {updateInfo,
     allStudent,
     allLecture,
     createStudent,
     createLecturer,
     deleteStudent,
-    deleteLecturer};
+    deleteLecturer,
+    allClass};

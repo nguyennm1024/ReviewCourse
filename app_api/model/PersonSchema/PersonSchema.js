@@ -47,10 +47,10 @@ PersonSchema.methods.generateJwt = function(more) {
     }, process.env.JWT_SECRET)
 }
 
-const extend = (Schema, obj) => (
+PersonSchema.methods.extend = (Schema, obj) => (
         new mongoose.Schema(
         Object.assign({}, Schema.obj, obj)
     )
 );
 
-module.exports = mongoose.model('PersonSchema',PersonSchema);
+module.exports = PersonSchema;
