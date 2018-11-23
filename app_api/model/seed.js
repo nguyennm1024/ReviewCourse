@@ -16,7 +16,8 @@ const admins = [{
 const classes = [{
     subject_id:'3453432',
     semester_id: 3,
-    name:'Phat trien ung dung web'
+    name:'Phat trien ung dung web',
+    listStudent:['5bf8538e335556137a382880']
 },
 {
     subject_id:'8678',
@@ -25,9 +26,9 @@ const classes = [{
 }]
 
 const reports = [{
-    student_id: '16021078',
-    class_id: '84651648',
-    subject_id:'INT3307'
+    subject_id:'INT3307',
+    student_id:'5bf8538e335556137a382880',
+    class_id:'5bf8681c9468451caa7d901e'
 }]
 
 const students = [{
