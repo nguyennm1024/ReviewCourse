@@ -134,7 +134,7 @@ const allClass = (req, res) => {
     Class.find({semester_id}, (err, listClass) =>{
         if(err) return res.status(400).json(err);
 
-        return res.status(400).json(listClass);
+        return res.status(200).json(listClass);
     })
 }
 

@@ -39,7 +39,8 @@ const students = [{
     birth: new Date(2000,1,1),
     classRoom:'K61-C-CLC',
     semester_id: 5,
-    role:"student"
+    role:"student",
+    classRegistered:['5bf8681c9468451caa7d901e']
 }]
 
 const lecturers = [{
@@ -52,18 +53,24 @@ const lecturers = [{
 createSeed();
 
 async function createSeed() {
-    await Class.create(classes);
-    let _class = await Class.find({}).exec();
+    let _class = await Class.findOne({}).exec();
+    if(!_class)
+        await Class.create(classes);
 
-    await Admin.create(admins);
-    let _admin = await Admin.find({}).exec();
+    let _admin = await Admin.findOne({}).exec();
+    if(!_admin)
+        await Admin.create(admins);
 
-    await Report.create(reports);
-    let _report = await Report.find({}).exec();
+    let _report = await Report.findOne({}).exec();
+    if(!_report)
+        await Report.create(reports);
+    
 
-    await Student.create(students);
-    let _student = await Student.find({}).exec();
+    let _student = await Student.findOne({}).exec();
+    if(!_student)
+        await Student.create(students);
 
-    await Lecturer.create(lecturers);
-    let _lecture = await Lecturer.find({}).exec();
+    let _lecture = await Lecturer.findOne({}).exec();
+    if(!_lecture)
+        await Lecturer.create(lecturers);
 }
