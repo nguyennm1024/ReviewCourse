@@ -6,27 +6,31 @@ const jwt = require('jsonwebtoken');
 
 const PersonSchema = new Schema({
     mail: {type : String, required: true, default:'nguyennm1024@gmail.com'},
-    password: {type: String, required: true},
+    password: {type: String, required: true, select: false},
     _hashAlready: {type: Boolean, default: false},
-    role: {type: String}
+    role: {type: String, select: false}
 });
 
-PersonSchema.pre('save', () => {
-    let self = this;
-    if(self._hashAlready || !self.password) {
-        return next();
-    }
-    bcrypt.genSalt((err,salt) => {
-        if(err) return next(err);
-        bcrypt.hash(self.password,salt,(err,salt) => {
-            if(err) return next(err);
-            self.password = hash;
-            self._hashAlready = true;
-            next();
-        })
-    })
-});
+// PersonSchema.pre('save', () => {
+//     let self = this;
+//     if(self._hashAlready || !self.password) {
+//         return next();
+//     }
+//     bcrypt.genSalt((err,salt) => {
+//         if(err) return next(err);
+//         bcrypt.hash(self.password,salt,(err,salt) => {
+//             if(err) return next(err);
+//             self.password = salt;
+//             self._hashAlready = true;
+//             next();
+//         })
+//     })
+// });
 
+// PersonSchema.pre('save', async function() {
+//     const hash = await bcrypt.hashSync(this.password, 8)
+//     this.password = hash
+// })
 PersonSchema.methods.comparePassword = function(password, callback) {
     let self = this;
     bcrypt.compare(password, self.password,(err, same) => {
@@ -47,10 +51,5 @@ PersonSchema.methods.generateJwt = function(more) {
     }, process.env.JWT_SECRET)
 }
 
-PersonSchema.methods.extend = (Schema, obj) => (
-        new mongoose.Schema(
-        Object.assign({}, Schema.obj, obj)
-    )
-);
 
 module.exports = PersonSchema;

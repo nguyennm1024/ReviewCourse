@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const PersonalSchema = require('./PersonSchema/PersonSchema');
 require('mongoose-schema-extend');
-
+const bcrypt = require('bcrypt')
 const extend = (Schema, obj) => (
     new mongoose.Schema(
       Object.assign({}, Schema.obj, obj)
@@ -24,4 +24,16 @@ const extend = (Schema, obj) => (
     classRegistered:[{type: Schema.Types.ObjectId, ref: "class"}]
 });
 
+studentSchema.pre('save', async function() {
+  const hash = await bcrypt.hashSync(this.password, 8)
+  this.password = hash
+  this._hashAlready = true;
+})
+
+studentSchema.methods.generateJwt = function(more) {
+  const {mail, _type} = this;
+  return jwt.sign({
+      mail, _type, more 
+  }, process.env.JWT_SECRET)
+}
 module.exports = mongoose.model(name,studentSchema);
