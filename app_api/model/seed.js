@@ -40,7 +40,7 @@ const students = [{
     classRoom:'K61-C-CLC',
     semester_id: 5,
     role:"student",
-    classRegistered:['5bf8681c9468451caa7d901e']
+    classRegistered:['5bf8985afad8ed37da083296']
 }]
 
 const lecturers = [{
