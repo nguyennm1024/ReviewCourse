@@ -4,6 +4,8 @@ const { Schema } = mongoose;
 const PersonalSchema = require('./PersonSchema/PersonSchema');
 require('mongoose-schema-extend');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
 const extend = (Schema, obj) => (
     new mongoose.Schema(
       Object.assign({}, Schema.obj, obj)
@@ -31,9 +33,22 @@ studentSchema.pre('save', async function() {
 })
 
 studentSchema.methods.generateJwt = function(more) {
-  const {mail, _type} = this;
+  const {mail, role} = this;
+  //console.log(role);
   return jwt.sign({
-      mail, _type, more 
-  }, process.env.JWT_SECRET)
+      mail, role, more 
+  }, "JWT_SECRET")
+}
+
+studentSchema.methods.comparePassword = function(password, callback) {
+  let self = this;
+  // bcrypt.compareSync(password, self.password,(err, same) => {
+  //   console.log(err);
+    
+  //     if(err) callback(err);
+  //     else callback(null, same)
+  // })
+  let same = bcrypt.compareSync(password,self.password)
+  callback(null,same)
 }
 module.exports = mongoose.model(name,studentSchema);

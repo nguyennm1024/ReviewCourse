@@ -75,7 +75,7 @@ const authenticate = async (mail, password, done) => {
 
     async function findUser(type) {
         if (!hasUser) {
-            console.log(type);
+            //console.log(type);
             let Model = findModel(type);
             let user = await Model.findOne({ mail }).exec();
 

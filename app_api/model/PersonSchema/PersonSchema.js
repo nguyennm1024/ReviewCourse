@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const PersonSchema = new Schema({
     mail: {type : String, required: true, default:'nguyennm1024@gmail.com'},
-    password: {type: String, required: true, select: false},
+    password: {type: String, required: true},
     _hashAlready: {type: Boolean, default: false},
     role: {type: String, select: false}
 });
@@ -44,12 +44,12 @@ PersonSchema.methods.changPassword = function(newPassword) {
     this.password = newPassword;
 }
 
-PersonSchema.methods.generateJwt = function(more) {
-    const {mail, _type} = this;
-    return jwt.sign({
-        mail, _type, more 
-    }, process.env.JWT_SECRET)
-}
+// PersonSchema.methods.generateJwt = function(more) {
+//     const {mail, _type} = this;
+//     return jwt.sign({
+//         mail, _type, more 
+//     }, process.env.JWT_SECRET)
+// }
 
 
 module.exports = PersonSchema;

@@ -23,10 +23,22 @@ adminSchema.pre('save', async function() {
 })
 
 adminSchema.methods.generateJwt = function(more) {
-  const {mail, _type} = this;
+  const {mail, role} = this;
   return jwt.sign({
-      mail, _type, more 
-  }, process.env.JWT_SECRET)
+      mail, role, more 
+  }, "JWT_SECRET")
+}
+
+adminSchema.methods.comparePassword = function(password, callback) {
+  let self = this;
+  // bcrypt.compareSync(password, self.password,(err, same) => {
+  //   console.log(err);
+    
+  //     if(err) callback(err);
+  //     else callback(null, same)
+  // })
+  let same = bcrypt.compareSync(password,self.password)
+  callback(null,same)
 }
 
 module.exports = mongoose.model(name,adminSchema);
