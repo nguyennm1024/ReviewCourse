@@ -5,7 +5,7 @@ const Class = require('../model/class')
 const Report = require('../model/report')
 
 const updateInfo = (req, res) => {
-    const {mail} = req.payload;
+    const {mail} = req.body;
     const {name, phoneNumber, password} = req.body;
     if(!name) return res.status(400).json({message: "Name is required"});
     if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
@@ -43,11 +43,14 @@ const allLecture = (req, res) => {
     })
 }
 
-const createStudent = (req, res) => {
+const createStudent = async (req, res) => {
     const {mail, password} = req.body;
 
     if(!mail) return res.status(400).json({message: 'mail is required'});
     if(!password) return res.status(400).json({message: 'password is required'});
+
+    let std_check = await Student.findOne({mail}).exec();
+    if(std_check) return res.status(400).json({message:'Student existed'});
 
     const {MSSV,name,birth,classRoom,avatar,phoneNumber,semester_id,classRegistered} = req.body;
 
@@ -63,18 +66,25 @@ const createStudent = (req, res) => {
     newStudent.semester_id = semester_id;
     newStudent.classRegistered = classRegistered;
 
+    //add type
+    newStudent.role = 'student';
+
     newStudent.save(e => {
         if(e) return res.status(500).json(e);
 
         return res.status(200).json({message: 'success'});
     })
+    // let students = req.body;
+    // return res.status(200).json(students[1]);
 }
 
-const createLecturer = (req,res) =>{
+const createLecturer = async (req,res) =>{
     const {mail, password} = req.body;
     if(!mail) return res.status(400).json({message: 'mail is required'});
     if(!password) return res.status(400).json({message: 'password is required'});
 
+    let lecturer_check = await Lecturer.findOne({mail}).exec();
+    if(lecturer_check) return res.status(400).json({message:'Lecturer existed'});
     const {birthday,phoneNumber,vnumail,note} = req.body;
 
     const newLecturer = new Lecturer();
@@ -85,6 +95,8 @@ const createLecturer = (req,res) =>{
     newLecturer.vnumail = vnumail;
     newLecturer.note = note;
 
+    newLecturer.role = 'lecturer';
+
     newLecturer.save(e => {
         if(e) return res.status(500).json(e);
 
@@ -92,9 +104,11 @@ const createLecturer = (req,res) =>{
     })
 }
 
-const deleteStudent = (req,res) => {
+const deleteStudent = async (req,res) => {
     const {mail} = req.body;
 
+    let std_check = await Student.findOne({mail}).exec();
+    if(!std_check) return res.status(400).json({message:'Student not found'});
     Student.findOneAndDelete({mail}, (err, resp) => {
         if(err) return res.status(400).json(err);
 
@@ -102,8 +116,11 @@ const deleteStudent = (req,res) => {
     });
 }
 
-const deleteLecturer = (req, res) => {
+const deleteLecturer = async (req, res) => {
     const { mail } = req.body;
+
+    let lec_check = await Lecturer.findOne({mail}).exec();
+    if(!lec_check) return res.status(400).json({message:'Lecturer not found'});
 
     Lecturer.findOneAndRemove({ mail }, (err, resp) => {
         if (err) return res.status(400).json(err);
@@ -112,10 +129,41 @@ const deleteLecturer = (req, res) => {
     });
 }
 
+const allClass = (req, res) => {
+    const {semester_id} = req.body;
+    Class.find({semester_id}, (err, listClass) =>{
+        if(err) return res.status(400).json(err);
+
+        return res.status(200).json(listClass);
+    })
+}
+
+const studentInClass = async (req, res) => {
+    const {_id} = req.body;
+    let classSelected = await Class.findOne({_id}).exec();
+    if(!classSelected) return res.status(400).json({message:'Class not found'})
+
+    let students = await Class.findOne({_id}).populate('listStudent').exec();
+    return res.status(200).json(students);
+}
+
+const getStudentReport = async (req,res) => {
+    const {student_id,class_id} = req.body;
+    if(!student_id) return res.status(400).json({message: 'Student_id is required'});
+    if(!class_id) return res.status(400).json({message:'Class_id is required'});
+
+    let reportOfStudent = await Report.findOne({student_id, class_id}).exec();
+    if(!reportOfStudent) return res.status(400).json({message: 'Report not found'});
+    return res.status(200).json(reportOfStudent);
+}
+
 module.exports = {updateInfo,
     allStudent,
     allLecture,
     createStudent,
     createLecturer,
     deleteStudent,
-    deleteLecturer};
+    deleteLecturer,
+    allClass,
+    studentInClass,
+    getStudentReport};

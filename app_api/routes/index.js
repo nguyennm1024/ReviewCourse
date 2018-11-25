@@ -1,6 +1,13 @@
+const mongoose = require('mongoose');
 const route = require('express').Router();
-const adminRoute = require('./adminRoutes')
+const adminRoutes = require('./adminRoutes');
+const studentRoutes = require('./studentRoutes');
+const lecturerRoutes = require('./lecturerRoutes');
+const authenticationRoutes = require('./authenticationRoutes')
 
-route.use('/admin', adminRoute);
+route.use('/', authenticationRoutes);
+route.use('/admin', adminRoutes);
+route.use('/student', studentRoutes);
+route.use('/lecturer', lecturerRoutes);
 
-module.exports =route;
+module.exports = route;

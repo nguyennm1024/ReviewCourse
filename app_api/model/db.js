@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uri = 'mongodb://localhost/btl';
+const PersonSchema = require('./PersonSchema/PersonSchema')
 
 mongoose.connect(uri, { useNewUrlParser: true });
 

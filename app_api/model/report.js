@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const reportSchema = new Schema({
-    student_id: {type:String, required: true},
-    class_id: {type: String, required: true},
+    student_id: {type:Schema.Types.ObjectId, ref:'student'},
+    class_id: {type: Schema.Types.ObjectId, ref: 'class'},
     subject_id:{type: String, required: true},
     giangDuong: {type: Number, default: 0},
     trangThietBi: {type: Number, default: 0},
