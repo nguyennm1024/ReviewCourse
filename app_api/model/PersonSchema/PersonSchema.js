@@ -8,7 +8,7 @@ const PersonSchema = new Schema({
     mail: {type : String, required: true, default:'nguyennm1024@gmail.com'},
     password: {type: String, required: true},
     _hashAlready: {type: Boolean, default: false},
-    role: {type: String, select: false}
+    role: {type: String}
 });
 
 // PersonSchema.pre('save', () => {

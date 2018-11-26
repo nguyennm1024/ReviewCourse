@@ -27,6 +27,7 @@ const findById = async (id, callback) => {
 
 const findByMail = async (mail, callback) => {
     try {
+        console.log("here")
         let person;
 
         if(!person) person = await Admin.findOne({mail}).exec();
@@ -80,7 +81,6 @@ const authenticate = async (mail, password, done) => {
             let user = await Model.findOne({ mail }).exec();
 
             if (user) {
-                console.log(user);
                 hasUser = true;
                 user.comparePassword(password, (err, same) => {
                     if (err) return done(err);
