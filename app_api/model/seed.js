@@ -48,7 +48,8 @@ const lecturers = [{
     password:'123',
     phoneNumber:'0981999999',
     note:'Web dev teacher',
-    role:"lecturer"
+    role:"lecturer",
+    teachingClass:['5bf9126b557bdc1cac9b6bde','5bf9126b557bdc1cac9b6bdd']
 }]
 createSeed();
 
