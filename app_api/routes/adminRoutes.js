@@ -7,7 +7,7 @@ const authMiddleware = require('express-jwt')({
     secret: 'JWT_SECRET'
 });
 
-route.post('/updateInfo', (req,res) => {
+route.post('/updateInfo',authMiddleware, (req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -23,7 +23,7 @@ route.post('/updateInfo', (req,res) => {
     })
 });
 
-route.get('/allStudent', (req,res) => {
+route.get('/allStudent',authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -39,7 +39,7 @@ route.get('/allStudent', (req,res) => {
     })
 });
 
-route.get('/allLecturer', (req,res) => {
+route.get('/allLecturer', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -55,7 +55,7 @@ route.get('/allLecturer', (req,res) => {
     })
 });
 
-route.post('/createStudent', (req,res) => {
+route.post('/createStudent', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -71,7 +71,7 @@ route.post('/createStudent', (req,res) => {
     })
 });
 
-route.post('/createLecturer', (req,res) => {
+route.post('/createLecturer', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -87,7 +87,7 @@ route.post('/createLecturer', (req,res) => {
     })
 });
 
-route.post('/deleteStudent', (req,res) => {
+route.post('/deleteStudent', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -103,7 +103,7 @@ route.post('/deleteStudent', (req,res) => {
     })
 });
 
-route.post('/deleteLecturer', (req,res) => {
+route.post('/deleteLecturer', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -119,7 +119,7 @@ route.post('/deleteLecturer', (req,res) => {
     })
 });
 
-route.post('/allClass', (req,res) => {
+route.post('/allClass',authMiddleware, authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -135,7 +135,7 @@ route.post('/allClass', (req,res) => {
     })
 });
 
-route.post('/studentInClass', (req,res) => {
+route.post('/studentInClass',authMiddleware, (req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -151,7 +151,7 @@ route.post('/studentInClass', (req,res) => {
     })
 });
 
-route.post('/getStudentReport', (req,res) => {
+route.post('/getStudentReport',authMiddleware, (req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});

@@ -52,6 +52,23 @@ const lecturers = [{
     teachingClass:['5bf9126b557bdc1cac9b6bde','5bf9126b557bdc1cac9b6bdd']
 }]
 createSeed();
+// let idClass;
+// const createClass = async (subject_id, semester_id) => {
+//     const newClass = new Class();
+//     newClass.subject_id = subject_id;
+//     newClass.semester_id = semester_id;
+//     await newClass.save((e, record) => {
+//         if(e) console.log("Class was not created");
+//         else
+//             console.log("Class created successfully");
+//         idClass = record._id;
+//         console.log(idClass)
+//     }, );
+// }
+// function execute() {
+//     createClass('2342',4);
+// }
+// execute();
 
 async function createSeed() {
     let _class = await Class.findOne({}).exec();

@@ -157,6 +157,20 @@ const getStudentReport = async (req,res) => {
     return res.status(200).json(reportOfStudent);
 }
 
+// const createClass = (subject_id, semester_id) => {
+//     const newClass = new Class();
+//     newClass.subject_id = subject_id;
+//     newClass.semester_id = semester_id;
+//     newClass.save((e, record) => {
+//         if(e) console.log("Class was not created");
+//         else
+//             console.log("Class created successfully");
+//         console.log(record);
+//     }, );
+// }
+
+
+
 module.exports = {updateInfo,
     allStudent,
     allLecture,

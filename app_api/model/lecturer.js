@@ -30,7 +30,7 @@ lecturerSchema.methods.generateJwt = function(more) {
     const {mail, role} = this;
     return jwt.sign({
         mail, role, more 
-    }, "JWT_SECRET")
+    }, "JWT_SECRET",{expiresIn:"2h"})
   }
   
   lecturerSchema.methods.comparePassword = function(password, callback) {

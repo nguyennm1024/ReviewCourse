@@ -26,7 +26,7 @@ adminSchema.methods.generateJwt = function(more) {
   const {mail, role} = this;
   return jwt.sign({
       mail, role, more 
-  }, "JWT_SECRET")
+  }, "JWT_SECRET", {expiresIn: '2h'})
 }
 
 adminSchema.methods.comparePassword = function(password, callback) {

@@ -37,7 +37,7 @@ studentSchema.methods.generateJwt = function(more) {
   //console.log(role);
   return jwt.sign({
       mail, role, more 
-  }, "JWT_SECRET")
+  }, "JWT_SECRET",{expiresIn:'2h'})
 }
 
 studentSchema.methods.comparePassword = function(password, callback) {
