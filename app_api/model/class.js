@@ -7,7 +7,8 @@ const classSchema = new Schema({
     semester_id :{type: Number},
     lecturer_id:{type:Schema.Types.ObjectId, ref:"lecturer"},
     listStudent: [{type: Schema.Types.ObjectId, ref:'student'}],
-    name:{type: String}
+    className:{type: String},
+    semantic_class_id:{type: String}
 });
 
 module.exports = mongoose.model(name, classSchema);

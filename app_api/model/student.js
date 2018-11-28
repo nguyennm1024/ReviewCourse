@@ -15,7 +15,7 @@ const extend = (Schema, obj) => (
   const studentSchema = extend(PersonalSchema,{
     //admin provide
     MSSV: {type: String, required: true},
-    name: {type: String, required: true},
+    studentName: {type: String, required: true},
     birth: {type: Date, default: Date.now()},
     classRoom: {type: String, required: true},
 

@@ -8,7 +8,7 @@ const Report = require('./report')
 const admins = [{
     mail:"admin@vnu.edu.vn",
     password:"123",
-    name:"nguyen",
+    adminName:"nguyen",
     phoneNumber:"23456",
     role: "admin"
 }] 
@@ -16,13 +16,13 @@ const admins = [{
 const classes = [{
     subject_id:'3453432',
     semester_id: 3,
-    name:'Phat trien ung dung web',
+    className:'Phat trien ung dung web',
     listStudent:['5bf8538e335556137a382880']
 },
 {
     subject_id:'8678',
     semester_id: 4,
-    name:'Tri tue nhan tao'
+    className:'Tri tue nhan tao'
 }]
 
 const reports = [{
@@ -35,7 +35,7 @@ const students = [{
     mail: '16021078@vnu.edu.vn',
     password: '123',
     MSSV:'16021078',
-    name:'nguyen',
+    studentName:'nguyen',
     birth: new Date(2000,1,1),
     classRoom:'K61-C-CLC',
     semester_id: 5,
@@ -44,6 +44,7 @@ const students = [{
 }]
 
 const lecturers = [{
+    lecturerName: 'Lê Đình Thanh',
     mail: 'thanhld@vnu.edu.vn',
     password:'123',
     phoneNumber:'0981999999',
@@ -69,6 +70,40 @@ createSeed();
 //     createClass('2342',4);
 // }
 // execute();
+
+// const createClass = (subject_id, semester_id, semantic_class_id, className) => {
+//     const newClass = new Class();
+//     newClass.subject_id = subject_id;
+//     newClass.semester_id = semester_id;
+//     newClass.semantic_class_id = semantic_class_id;
+//     newClass.className =className;
+//     newClass.save((err, record) => {
+//         if(err) console.log(err)
+//         else console.log(record)
+//     })
+// }
+
+// const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_class_id, subject_id, studentName, className) =>{
+//     Student.findOne({mail, semester_id}, async (err, myStudent) => {
+//         if(!myStudent) {
+//             myStudent = new Student();
+//             myStudent.mail = mail;
+//             myStudent.password = 'DEFAULT_PASSWORD';
+//             myStudent.MSSV = MSSV;
+//             myStudent.classRoom = classRoom,
+//             myStudent.semester_id = semester_id
+//             myStudent.studentName = studentName
+//         }
+//         const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
+//         if(!class_check) await createClass(subject_id, semester_id, semantic_class_id, className)
+//         const myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+//         myStudent.classRegistered.push(myClass._id)
+//         myStudent.save();
+        
+//     })
+// }
+
+// addClassToStudent('16021078@vnu.edu.vn','16021078','K61C-CLC',4,'INT3307 1','INT3307', 'Nguyen');
 
 async function createSeed() {
     let _class = await Class.findOne({}).exec();

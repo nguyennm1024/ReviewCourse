@@ -7,7 +7,7 @@ const authMiddleware = require('express-jwt')({
     secret: 'JWT_SECRET'
 });
 //getClass
-route.post('/getClass', (req,res) => {
+route.post('/getClass',authMiddleware ,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -23,7 +23,7 @@ route.post('/getClass', (req,res) => {
     })
 });
 
-route.post('/getReport', (req,res) => {
+route.post('/getReport', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});

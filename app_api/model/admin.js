@@ -13,7 +13,7 @@ const extend = (Schema, obj) => (
   );
 
 const adminSchema = extend(PersonSchema, {
-    name: {type: String, required: true},
+    adminName: {type: String, required: true},
     phoneNumber:{type: String, required: true}
 });
 adminSchema.pre('save', async function() {

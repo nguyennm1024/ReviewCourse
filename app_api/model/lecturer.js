@@ -12,6 +12,7 @@ const extend = (Schema, obj) => (
   )
 );
 const lecturerSchema = extend(PersonSchema,{
+    lecturerName: {type: String},
     birthday: {type: Date},
     phoneNumber: {type: String, require},
     vnumail: {type: String},
