@@ -246,7 +246,10 @@ const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_cla
     }
     const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
     if(!class_check) await createClass(subject_id, semester_id, semantic_class_id, className)
-    const myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    let myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    if(!myClass)
+        await createClass(subject_id, semester_id, semantic_class_id,className)
+    myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
     readStudent = await Student.findOne({mail, semester_id})
     readStudent.classRegistered.push(myClass._id)
     readStudent.save();
