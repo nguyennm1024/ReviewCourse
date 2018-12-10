@@ -102,11 +102,12 @@ const createLecturer = async (req,res) =>{
 
     let lecturer_check = await Lecturer.findOne({mail,semester_id}).exec();
     if(lecturer_check) return res.status(400).json({message:'Lecturer existed'});
-    const {birthday,phoneNumber,vnumail,note} = req.body;
+    const {birthday,phoneNumber,vnumail,note, lecturerName} = req.body;
 
     const newLecturer = new Lecturer();
     newLecturer.mail = mail;
     newLecturer.password = password;
+    newLecturer.lecturerName = lecturerName;
     newLecturer.birthday = new Date(2000,1,1);
     newLecturer.phoneNumber = phoneNumber;
     newLecturer.vnumail = vnumail;
@@ -316,8 +317,8 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
 }
 
 const createReport = async (req,res) => {
-    const {lecturerMail, studentMail, MSSV,classRoom,semester_id, semantic_class_id, subject_id, studentName, className} =req.body;
-    
+    const {lecturerMail, studentMail, MSSV,classRoom,semester_id, semantic_class_id, subject_id, studentName, className, lecturerName} =req.body;
+    await addClassToLecturer(semantic_class_id, semester_id,lecturerMail, lecturerName, subject_id)
     await addClassToStudent(studentMail, MSSV, classRoom, semester_id, semantic_class_id, subject_id, studentName, className);
     await addStudentToClass(semester_id, semantic_class_id, subject_id, className, studentMail, classRoom, MSSV, studentName);
     let mail = studentMail;
