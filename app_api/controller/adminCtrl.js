@@ -272,6 +272,27 @@ const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_cla
     readStudent.save();
 
 }
+
+const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturerName,subject_id) => {
+    let lecturer_check = await Lecturer.findOne({mail, semester_id})
+    if(!lecturer_check) {
+        const myLecturer = new Lecturer();
+        myLecturer.mail = mail;
+        myLecturer.password = DEFAULT_PASSWORD;
+        myLecturer.semester_id = semester_id
+        myLecturer.lecturerName = lecturerName
+        await myLecturer.save();
+    }
+    const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
+    if(!class_check) await createClass(subject_id, semester_id, semantic_class_id, className)
+    let myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    if(!myClass)
+        await createClass(subject_id, semester_id, semantic_class_id,className)
+    myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    readLecturer = await Lecturer.findOne({mail, semester_id})
+    readLecturer.teachingClass.push(myClass._id)
+    readLecturer.save();
+}
 const addStudentToClass = async (semester_id, semantic_class_id, subject_id, className, mail, classRoom, MSSV, studentName) => {
     let class_check = Class.findOne({semester_id, semantic_class_id})
     if(!class_check) {
@@ -295,9 +316,11 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
 }
 
 const createReport = async (req,res) => {
-    const {mail, MSSV,classRoom,semester_id, semantic_class_id, subject_id, studentName, className} =req.body;
-    await addClassToStudent(mail, MSSV, classRoom, semester_id, semantic_class_id, subject_id, studentName, className);
-    await addStudentToClass(semester_id, semantic_class_id, subject_id, className, mail, classRoom, MSSV, studentName);
+    const {lecturerMail, studentMail, MSSV,classRoom,semester_id, semantic_class_id, subject_id, studentName, className} =req.body;
+    
+    await addClassToStudent(studentMail, MSSV, classRoom, semester_id, semantic_class_id, subject_id, studentName, className);
+    await addStudentToClass(semester_id, semantic_class_id, subject_id, className, studentMail, classRoom, MSSV, studentName);
+    let mail = studentMail;
     let find_student = await Student.findOne({mail}).exec();
     let find_class = await Class.findOne({semantic_class_id, semester_id}).exec();
     let student_id = find_student._id
@@ -308,6 +331,7 @@ const createReport = async (req,res) => {
             newReport.student_id = find_student._id;
             newReport.class_id = find_class._id;
             newReport.subject_id = find_class.subject_id
+            newReport.semester_id = semester_id
             await newReport.save();
             return res.status(200).json({message:'success'});
         }
