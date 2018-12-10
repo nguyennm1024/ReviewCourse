@@ -30,20 +30,33 @@ const updateInfo = (req, res) => {
 }
 
 const allStudent = (req, res) => {
-    const {semester_id} = req.body;
-    Student.find({semester_id}, (err, students) => {
+    Student.find().distinct('mail', async (err, students) => {
         if(err) return res.status(400).json(err);
-
-        res.status(200).json({students});
+        results = []
+        let i;
+        for (i = 0; i < students.length; i++) {
+            let mail = students[i];
+            let result = await Student.findOne({mail});
+            console.log(mail)
+            results.push(result);
+        }
+        res.status(200).json(results);
     })
 }
 
-const allLecture = (req, res) => {
-    const {semester_id} = req.body;
-    Lecturer.find({semester_id},(err, lecturers) => {
+const allLecture = async (req, res) => {
+    
+    Lecturer.find().distinct('mail', async (err, lecturers) => {
         if(err) return res.status(400).json(err);
-
-        res.status(200).json({lecturers});
+        results = []
+        let i;
+        for (i = 0; i < lecturers.length; i++) {
+            let mail = lecturers[i];
+            let result = await Lecturer.findOne({mail});
+            console.log(mail)
+            results.push(result);
+        }
+        res.status(200).json(results);
     })
 }
 

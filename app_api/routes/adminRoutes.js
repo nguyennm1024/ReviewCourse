@@ -23,7 +23,7 @@ route.post('/updateInfo',authMiddleware, (req,res) => {
     })
 });
 
-route.post('/allStudent',authMiddleware,(req,res) => {
+route.get('/allStudent',authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -39,7 +39,7 @@ route.post('/allStudent',authMiddleware,(req,res) => {
     })
 });
 
-route.post('/allLecturer', authMiddleware,(req,res) => {
+route.get('/allLecturer', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
