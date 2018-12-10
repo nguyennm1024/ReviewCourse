@@ -23,7 +23,7 @@ route.post('/updateInfo',authMiddleware, (req,res) => {
     })
 });
 
-route.get('/allStudent',authMiddleware,(req,res) => {
+route.post('/allStudent',authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -39,7 +39,7 @@ route.get('/allStudent',authMiddleware,(req,res) => {
     })
 });
 
-route.get('/allLecturer', authMiddleware,(req,res) => {
+route.post('/allLecturer', authMiddleware,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -211,6 +211,22 @@ route.post('/createReport',authMiddleware, (req,res) => {
         if(err) return res.status(403).json({message:"Token error"});
         if(authData.role === "admin")
             adminCtrl.createReport(req,res);
+        else return res.status(403).json({message:"You are not admin"});
+    })
+});
+
+route.post('/generalReport',authMiddleware, (req,res) => {
+    let bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader === 'undefined') {
+        return res.status(403).json({message: "Token undefined"});
+    }
+    const bearer = bearerHeader.split(' ');
+    const token = bearer[1];
+    //console.log(token);
+    jwt.verify(token, "JWT_SECRET", (err, authData) => {
+        if(err) return res.status(403).json({message:"Token error"});
+        if(authData.role === "admin")
+            adminCtrl.generalReport(req,res);
         else return res.status(403).json({message:"You are not admin"});
     })
 });
