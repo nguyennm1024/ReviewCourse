@@ -17,7 +17,7 @@ const updateInfo = (req, res) => {
         if(err) return res.status(400).json({err});
         if(!admin) return res.status(400).json({message: 'no admin founded'});
 
-        admin.name = name;
+        admin.name = adminName;
         admin.phoneNumber = phoneNumber;
         admin.password = password;
 
@@ -93,6 +93,34 @@ const createStudent = async (req, res) => {
     })
     // let students = req.body;
     // return res.status(200).json(students[1]);
+}
+
+const updateInfoStudent = (req, res) => {
+    const {mail} = req.body;
+    const {studentName, phoneNumber, password, MSSV, birth, classRoom, semester_id, classRegistered} = req.body;
+    if(!studentName) return res.status(400).json({message: "Name is required"});
+    if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
+    if(!password) res.status(400).json({message:"Password is required"});
+
+    Student.findOne({mail}, (err, student) =>{
+        if(err) return res.status(400).json({err});
+        if(!student) return res.status(400).json({message: 'no student founded'});
+
+        student.mail =mail;
+        student.password = password;
+        student.MSSV = MSSV;
+        student.studentName = studentName;
+        student.birth = birth;
+        student.classRoom = classRoom;
+        student.phoneNumber = phoneNumber;
+        student.semester_id = semester_id;
+        student.classRegistered = classRegistered;
+        student.save(e => {
+            if(e) return res.status(400).json(e);
+
+            return res.status(200).json({message: 'success'});
+        })
+    })
 }
 
 const createLecturer = async (req,res) =>{
@@ -274,7 +302,7 @@ const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_cla
 
 }
 
-const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturerName,subject_id) => {
+const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturerName,subject_id, className) => {
     let lecturer_check = await Lecturer.findOne({mail, semester_id})
     if(!lecturer_check) {
         const myLecturer = new Lecturer();
@@ -318,7 +346,7 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
 
 const createReport = async (req,res) => {
     const {lecturerMail, studentMail, MSSV,classRoom,semester_id, semantic_class_id, subject_id, studentName, className, lecturerName} =req.body;
-    await addClassToLecturer(semantic_class_id, semester_id,lecturerMail, lecturerName, subject_id)
+    await addClassToLecturer(semantic_class_id, semester_id,lecturerMail, lecturerName, subject_id, className)
     await addClassToStudent(studentMail, MSSV, classRoom, semester_id, semantic_class_id, subject_id, studentName, className);
     await addStudentToClass(semester_id, semantic_class_id, subject_id, className, studentMail, classRoom, MSSV, studentName);
     let mail = studentMail;
