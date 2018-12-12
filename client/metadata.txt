@@ -1,2 +1,0 @@
-You should develop front-end in this folder.
-Please do not change anything in my code

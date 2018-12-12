@@ -3,30 +3,46 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter as Router} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import Login from './Components/Login';
+import AuthService from './Components/AuthService';
+import History from './Components/History';
+const Auth = new AuthService();
 
-// let state = {};
-
-// window.setState = (changes) => {
-//     state = Object.assign({}, state, changes);
-//     ReactDOM.render(<App {...state}/>, document.getElementById('root'));
-// }
-
-// let initialState = {
-//     name: "Duong",
-//     location: location.pathname.replace(/^\/?|\/$/g, "")
-// };
 ReactDOM.render(
     <Router>
-        <App />
-    </Router>, 
-    document.getElementById('root')
-);
+        <div>
+            <Switch>
+                <Route exact path="/login" component={Login} /> 
+                <PrivateRoute component={App}/>
+            </Switch>
+        </div>
+    </Router>,
+document.getElementById('root'));
 
 if (module.hot) {
     module.hot.accept();
 }
-//window.setState(initialState);
+
+function PrivateRoute({ component: Component, ...rest }) {
+    return (
+      <Route
+        {...rest}
+        render={props =>
+           Auth.loggedIn() ? (
+            <Component {...props} />
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                // state: { from: props.location }
+              }}
+            />
+          )
+        }
+      />
+    );
+  }
 
 
 // If you want your app to work offline and load faster, you can change

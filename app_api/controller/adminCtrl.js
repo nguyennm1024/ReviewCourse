@@ -293,12 +293,12 @@ const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_cla
     const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
     if(!class_check) await createClass(subject_id, semester_id, semantic_class_id, className)
     let myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
-    if(!myClass)
-        await createClass(subject_id, semester_id, semantic_class_id,className)
-    myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    // if(!myClass)
+    //     await createClass(subject_id, semester_id, semantic_class_id,className)
+    // myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
     readStudent = await Student.findOne({mail, semester_id})
     readStudent.classRegistered.push(myClass._id)
-    readStudent.save();
+    await readStudent.save();
 
 }
 
@@ -315,15 +315,15 @@ const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturer
     const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
     if(!class_check) await createClass(subject_id, semester_id, semantic_class_id, className)
     let myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
-    if(!myClass)
-        await createClass(subject_id, semester_id, semantic_class_id,className)
-    myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    // if(!myClass)
+    //     await createClass(subject_id, semester_id, semantic_class_id,className)
+    // myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
     readLecturer = await Lecturer.findOne({mail, semester_id})
     readLecturer.teachingClass.push(myClass._id)
-    readLecturer.save();
+    await readLecturer.save();
 }
 const addStudentToClass = async (semester_id, semantic_class_id, subject_id, className, mail, classRoom, MSSV, studentName) => {
-    let class_check = Class.findOne({semester_id, semantic_class_id})
+    let class_check = await Class.findOne({semester_id, semantic_class_id})
     if(!class_check) {
         await createClass(subject_id, semester_id, semantic_class_id, className)
     }
@@ -333,7 +333,7 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
         student_check.mail = mail;
         student_check.password = DEFAULT_PASSWORD;
         student_check.MSSV = MSSV;
-        student_check.classRoom = classRoom,
+        student_check.classRoom = classRoom
         student_check.semester_id = semester_id
         student_check.studentName = studentName
         await student_check.save()
@@ -341,7 +341,7 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
     const find_class = await Class.findOne({semester_id, semantic_class_id}).exec();
     const find_student = await Student.findOne({mail, semester_id});
     find_class.listStudent.push(find_student._id);
-    find_class.save();
+    await find_class.save();
 }
 
 const createReport = async (req,res) => {
@@ -354,7 +354,7 @@ const createReport = async (req,res) => {
     let find_class = await Class.findOne({semantic_class_id, semester_id}).exec();
     let student_id = find_student._id
     let class_id = find_class._id
-    Report.findOne({student_id, class_id}, async (err,record) => {
+    await Report.findOne({student_id, class_id}, async (err,record) => {
         if(!record) {
             newReport = new Report();
             newReport.student_id = find_student._id;
