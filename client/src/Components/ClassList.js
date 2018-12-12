@@ -25,25 +25,21 @@ class ClassList extends Component {
             body: JSON.stringify({'semester_id': this.state.semester_id})
         }).then(response => response.json())
             .then(response => {
-                // console.log(response);
-                console.log(this.state.classList);
                 this.setState({ listClass: response.map(subject => ({
                     classId: subject.subject_id,
                     className: subject.className,
                     semester_id: subject.semester_id,
                 }))})
-                console.log(this.state.classList);
             })
             .catch(error => console.log('Loi', error));
     }
 
     render() {
-        console.log(this.state.listClass);
         let listClass;
         switch (this.state.role) {
             case 'admin':
-                listClass = this.state.listClass.map((subject) =>
-                    <div key={subject.classId} className="col-lg-3 col-md-6">
+                listClass = this.state.listClass.map((subject, index) =>
+                    <div key={index} className="col-lg-3 col-md-6">
                         <div className="panel panel-green">
                             <div className="panel-heading">
                                 <div className="row">
@@ -69,8 +65,8 @@ class ClassList extends Component {
                 );
                 break;
             case 'student':
-                listClass = this.state.listClass.map((subject) =>
-                    <div key={subject.classId} className="col-lg-3 col-md-6">
+                listClass = this.state.listClass.map((subject, index) =>
+                    <div key={index} className="col-lg-3 col-md-6">
                         <div className="panel panel-green">
                             <div className="panel-heading">
                                 <div className="row">
@@ -96,8 +92,8 @@ class ClassList extends Component {
                 );
                 break;
             case 'lecturer':
-                listClass = this.state.listClass.map((subject) =>
-                    <div key={subject.classId} className="col-lg-3 col-md-6">
+                listClass = this.state.listClass.map((subject, index) =>
+                    <div key={index} className="col-lg-3 col-md-6">
                         <div className="panel panel-green">
                             <div className="panel-heading">
                                 <div className="row">

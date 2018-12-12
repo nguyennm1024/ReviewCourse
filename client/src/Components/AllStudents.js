@@ -19,14 +19,12 @@ class AllStudents extends Component {
             }
         }).then(response => response.json())
             .then(response => {
-                console.log(response);
                 this.setState({ students: response });
             })
             .catch(error => console.log('Loi', error));
     }
 
     render() {
-        console.log(this.state);
         let listStudents = this.state.students.map((student, index) =>
             <tr key={student.MSSV}>
                 <td>{index + 1}</td>

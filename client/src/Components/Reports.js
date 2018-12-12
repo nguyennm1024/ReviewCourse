@@ -1,26 +1,5 @@
 import React, { Component } from 'react';
-
-const keyValue = {
-    giangDuong: "Giảng đường đáp ứng yêu cầu của môn học",
-    trangThietBi: "Các trang thiết bị của giảng đường đáp ứng yêu cầu giảng dạy và học tập",
-    hoTroKipThoi: "Bạn được hỗ trợ kịp thời trong quá trình học môn này",
-    mucTieuMonHoc: "Mục tiêu của môn học nêu rõ kiến thức và kỹ năng người học cần đạt được",
-    thoiLuongMonHoc: "Thời lượng môn học được phân bổ hợp lí cho các hình thức học tập",
-    taiLieu: "Các tài liệu phục vụ môn học được cập nhật",
-    trangBiKienThuc: "Môn học góp phần trang bị kiến thức kĩ năng nghề nghiệp cho bạn",
-    giangVienThucHienDayDu: "Giảng viên thực hiện đầy đủ nội dung và thời lượng của môn học theo kế hoạch",
-    giangVienHuongDanBatDauMonHoc: "Giảng viên hướng dẫn bạn phương pháp học tập khi bắt đầu môn học",
-    phuongPhapGiangDay: "Phương pháp giảng dạy của giảng viên giúp bạn phát triển tư duy",
-    giangVienTaoCoHoi: "Giảng viên tạo cơ hội để bạn chủ động tham gia vào quá trình học tập",
-    giangVienGiupDocLap: "Giảng viên giúp bạn phát triển kĩ năng làm việc độc lập",
-    giangVienThucTien: "Giảng viên rèn luyện cho bạn phương pháp liên hệ giữa các vấn đề trong môn học với thực tiễn",
-    giangVienSuDungCongCu: "Giảng viên sử dụng hiệu quả phương tiện dạy học",
-    giangVienGiaoDucTuCachNguoiHoc: "Giảng viên quan tâm giáo dục tư cách, phẩm chất nghề nghiệp của người học",
-    hieuBai: "Bạn hiểu những vấn đề được truyền tải trên lớp",
-    cachDanhGia: "Kết quả học tập của người học được đánh giá bằng nhiều hình thức phù hợp với tính chất và đặc thù môn học",
-    noiDungDanhGia: "Nội dung kiểm tra đánh giá tổng hợp được các kĩ năng mà người học phải đạt theo yêu cầu",
-    tacDungThongTinPhanHoi: "Thông tin phản hồi từ kiểm tra đánh giá giúp bạn cải thiện kết quả học tập",
-};
+import { KeyValue } from './KeyValueSurvey';
 
 const headerTable = (
     <thead>
@@ -67,7 +46,7 @@ class Reports extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
     }
-    
+
     handleInputChange() {
         // let target = event.target;
         // let value = target.value;
@@ -91,9 +70,9 @@ class Reports extends Component {
     }
 
     render() {
-        let listSurveys = Object.getOwnPropertyNames(this.state).slice(4).map(survey => 
+        let listSurveys = Object.getOwnPropertyNames(this.state).slice(4).map(survey =>
             <tr key={survey}>
-                <td>{keyValue[survey]}</td>
+                <td>{KeyValue[survey]}</td>
                 <td>
                     <input
                         type="radio"
@@ -141,45 +120,47 @@ class Reports extends Component {
                 </td>
             </tr>
         );
+
         return (
-                <div className="row">
-                    <div className="col-lg-12">
-                        <div className="panel panel-default">
-                            <div className="panel-heading text-center">
-                                <h4>Toán rời rạc INT1003 1</h4>
-                            </div>
+            <div className="row">
+                <div className="col-lg-12">
+                    <div className="panel panel-default">
+                        <div className="panel-heading text-center">
+                            <h4>Toán rời rạc INT1003 1</h4>
+                        </div>
 
-                            <div className="panel-body">
-                                <p>1.* Cơ sở vật chất</p>
-                                <table className="table">
-                                    {headerTable}
-                                    <tbody>
-                                        {listSurveys.slice(0, 2)}
-                                    </tbody>
-                                </table>
-                                
-                                <p>2.* Môn học</p>
-                                <table className="table">
-                                    {headerTable}
-                                    <tbody>
-                                        {listSurveys.slice(2, 7)}
-                                    </tbody>
-                                </table>
+                        <div className="panel-body">
+                            <GroupSurvey
+                                groupName="1.* Cơ sở vật chất"
+                                listGroup={listSurveys.slice(0, 2)}
+                            />
 
-                                <p>3.* Hoạt động giảng dạy của giảng viên</p>
-                                <table className="table">
-                                    {headerTable}
-                                    <tbody>
-                                        {listSurveys.slice(7)}
-                                    </tbody>
-                                </table>
-                            </div>
+                            <GroupSurvey
+                                groupName="2.* Môn học"
+                                listGroup={listSurveys.slice(2, 7)}
+                            />
+
+                            <GroupSurvey
+                                groupName="3.* Hoạt động giảng dạy của giảng viên"
+                                listGroup={listSurveys.slice(7)}
+                            />
                         </div>
                     </div>
-                    <button onClick={this.handleInputChange}>xxx</button>
                 </div>
+                <button onClick={this.handleInputChange}>xxx</button>
+            </div>
         );
     }
 }
 
+const GroupSurvey = (props) =>
+    <div>
+        <p>{props.groupName}</p>
+        <table className="table">
+            {headerTable}
+            <tbody>
+                {props.listGroup}
+            </tbody>
+        </table>
+    </div>
 export default Reports;

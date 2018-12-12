@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Nav from './Nav';
 import PageWrapper from './PageWrapper';
-import Sidebar from './Sidebar';
 import decode from 'jwt-decode';
 
 // const role = decode(localStorage.getItem('id_token')).role;

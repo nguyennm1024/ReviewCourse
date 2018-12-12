@@ -19,7 +19,6 @@ class AllTeachers extends Component {
         })
         .then(response => response.json())
         .then(response => {
-            console.log(response);
             this.setState({ teachers: response });
         })
         .catch(err => console.log('Loi' + err));
@@ -27,9 +26,9 @@ class AllTeachers extends Component {
 
     render() {
         let listTeachers = this.state.teachers.map((teacher, index) => 
-            <tr key={teacher.userName}>
+            <tr key={teacher.mail}>
                 <td>{index + 1}</td>
-                <td>{teacher.mail}</td>
+                <td>{teacher.mail.split("@")[0]}</td>
                 <td>{teacher.lecturerName}</td>
                 <td>{teacher.mail}</td>
             </tr>

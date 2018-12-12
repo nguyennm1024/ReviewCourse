@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
-import AuthService from './AuthService';
-
-// const role = decode(localStorage.getItem('id_token')).role;
 
 const Dropdown = props =>
     <li>

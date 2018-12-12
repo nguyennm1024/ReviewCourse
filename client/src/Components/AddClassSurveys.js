@@ -22,48 +22,29 @@ class AddClassSurveys extends Component {
     async addClassSurvey() {
         let token = localStorage.getItem("id_token");
         let list = this.state.listStudent;
-        
+
         for (let i = 0; i < list.length; i++) {
-            try {
-                let response = await fetch(API_addClassSurvey, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                    },
-                    body: JSON.stringify({
-                        'lecturerMail': 'thanhld@vnu.edu.vn',
-                        'semantic_class_id': this.state.subject_id,
-                        'subject_id': this.state.subject_id.split(" ")[0],
-                        'className': this.state.name,
-                        'lecturerName': this.state.teacherName,
-                        'studentMail': list[i].MSSV + '@vnu.edu.vn',
-                        'MSSV': list[i].MSSV,
-                        'classRoom': list[i].classRoom,
-                        'semester_id': 1,
-                        'studentName': list[i].name,
-                    })
+            const response = await fetch(API_addClassSurvey, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify({
+                    'lecturerMail': 'thanhld@vnu.edu.vn',
+                    'semantic_class_id': this.state.subject_id,
+                    'subject_id': this.state.subject_id.split(" ")[0],
+                    'className': this.state.name,
+                    'lecturerName': this.state.teacherName,
+                    'studentMail': list[i].MSSV + '@vnu.edu.vn',
+                    'MSSV': list[i].MSSV,
+                    'classRoom': list[i].classRoom,
+                    'semester_id': 1,
+                    'studentName': list[i].name,
                 })
-    
-                response = response.json()
-            } catch (error) {
-                console.log(error);
-            }
-           
-            
+            })
+            response = response.json();
         }
-        console.log(JSON.stringify({
-            'lecturerMail': 'thanhld@vnu.edu.vn',
-            'semantic_class_id': this.state.subject_id,
-            'subject_id': this.state.subject_id.split(" ")[0],
-            'className': this.state.name,
-            'lecturerName': this.state.teacherName,
-            'studentMail': list[0].MSSV + '@vnu.edu.vn',
-            'MSSV': list[0].MSSV,
-            'classRoom': list[0].classRoom,
-            'semester_id': 1,
-            'studentName': list[0].name,
-        }));
     }
 
     addFromExcel(event) {

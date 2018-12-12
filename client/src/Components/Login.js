@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import AuthService from './AuthService';
 
-const API_LOGIN = "http://localhost:5000/api/login";
 class Login extends Component {
     constructor(props) {
         super(props);

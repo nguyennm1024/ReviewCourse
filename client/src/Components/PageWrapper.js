@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import decode from 'jwt-decode';
 import AddClassSurveys from './AddClassSurveys';
 import ClassInfo from './ClassInfo';
@@ -10,6 +10,8 @@ import AddStudents from './AddStudents';
 import AddTeachers from './AddTeachers';
 import DeleteStudents from './DeleteStudents';
 import DeleteTeachers from './DeleteTeachers';
+import SurveyResult from './SurveyResult';
+import Reports from './Reports';
 // import './page.css';
 
 class PageWrapper extends Component {
@@ -42,6 +44,10 @@ class PageWrapper extends Component {
                         <Route path="/addTeachers" component={AddTeachers} />
 
                         <Route path="/deleteTeachers" component={DeleteTeachers} />
+
+                        <Route path="/surveyResult" component={SurveyResult} />
+
+                        <Route path="/report" component={Reports} />
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>
