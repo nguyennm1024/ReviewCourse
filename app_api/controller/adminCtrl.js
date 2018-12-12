@@ -297,9 +297,12 @@ const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_cla
     //     await createClass(subject_id, semester_id, semantic_class_id,className)
     // myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
     readStudent = await Student.findOne({mail, semester_id})
-    readStudent.classRegistered.push(myClass._id)
-    await readStudent.save();
-
+    if(myClass) {
+        let check_select = await readStudent.classRegistered.indexOf(myClass._id)
+        if(check_select === -1)
+            readStudent.classRegistered.push(myClass._id)
+        await readStudent.save();
+    }
 }
 
 const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturerName,subject_id, className) => {
@@ -319,8 +322,11 @@ const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturer
     //     await createClass(subject_id, semester_id, semantic_class_id,className)
     // myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
     readLecturer = await Lecturer.findOne({mail, semester_id})
-    readLecturer.teachingClass.push(myClass._id)
-    await readLecturer.save();
+    if(myClass)
+   { let check_select = await readLecturer.teachingClass.indexOf(myClass._id)
+    if(check_select === -1)
+        readLecturer.teachingClass.push(myClass._id)
+    await readLecturer.save();}
 }
 const addStudentToClass = async (semester_id, semantic_class_id, subject_id, className, mail, classRoom, MSSV, studentName) => {
     let class_check = await Class.findOne({semester_id, semantic_class_id})
@@ -340,7 +346,9 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
     }
     const find_class = await Class.findOne({semester_id, semantic_class_id}).exec();
     const find_student = await Student.findOne({mail, semester_id});
-    find_class.listStudent.push(find_student._id);
+    let check_select = await find_class.listStudent.indexOf(find_student._id)
+    if(check_select === -1)
+        find_class.listStudent.push(find_student._id);
     await find_class.save();
 }
 

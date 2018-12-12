@@ -26,6 +26,7 @@ const classes = [{
 }]
 
 const reports = [{
+    semester_id:5,
     subject_id:'INT3307',
     student_id:'5bf8538e335556137a382880',
     class_id:'5bf8681c9468451caa7d901e'
@@ -45,6 +46,7 @@ const students = [{
 
 const lecturers = [{
     lecturerName: 'Lê Đình Thanh',
+    semester_id: 5,
     mail: 'thanhld@vnu.edu.vn',
     password:'123',
     phoneNumber:'0981999999',
