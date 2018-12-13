@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const PersonSchema = new Schema({
-    mail: {type : String, required: true, default:'nguyennm1024@gmail.com'},
+    mail: {type : String, required: true, default:'nguyennm1024@vnu.edu.vn'},
     password: {type: String, required: true},
     _hashAlready: {type: Boolean, default: false},
     role: {type: String}

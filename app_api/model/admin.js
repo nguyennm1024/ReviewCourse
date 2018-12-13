@@ -17,9 +17,11 @@ const adminSchema = extend(PersonSchema, {
     phoneNumber:{type: String, required: true}
 });
 adminSchema.pre('save', async function() {
-  const hash = await bcrypt.hashSync(this.password, 8)
-  this.password = hash
-  this._hashAlready = true;
+  if(this._hashAlready === false) {
+    const hash = await bcrypt.hashSync(this.password, 8)
+    this.password = hash
+    this._hashAlready = true;
+  }
 })
 
 adminSchema.methods.generateJwt = function(more) {

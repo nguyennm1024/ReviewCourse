@@ -22,9 +22,11 @@ const lecturerSchema = extend(PersonSchema,{
 });
 
 lecturerSchema.pre('save', async function() {
-    const hash = await bcrypt.hashSync(this.password, 8)
-    this.password = hash
-    this._hashAlready = true;
+    if(this._hashAlready === false) {
+      const hash = await bcrypt.hashSync(this.password, 8)
+      this.password = hash
+      this._hashAlready = true;
+    }
   })
 
 lecturerSchema.methods.generateJwt = function(more) {
