@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import Login from './Components/Login';
 import AuthService from './Components/AuthService';
-import History from './Components/History';
 const Auth = new AuthService();
 
 ReactDOM.render(
@@ -19,10 +18,6 @@ ReactDOM.render(
         </div>
     </Router>,
 document.getElementById('root'));
-
-if (module.hot) {
-    module.hot.accept();
-}
 
 function PrivateRoute({ component: Component, ...rest }) {
     return (
@@ -45,6 +40,9 @@ function PrivateRoute({ component: Component, ...rest }) {
   }
 
 
+if (module.hot) {
+    module.hot.accept();
+}
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA

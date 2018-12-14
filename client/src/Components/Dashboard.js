@@ -1,50 +1,50 @@
 import React, { Component } from 'react';
 import ClassList from './ClassList';
 import { Link } from 'react-router-dom';
+import ClassInfo from './ClassInfo';
 import decode from 'jwt-decode';
+import Reports from './Reports';
 
 const StartSemester = 2018;
+
+const API_allClass = "http://localhost:5000/api/admin/allClass";
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            semester_id: 3,
-            classList: [
-                // {
-                //     classId: 'INT3306 1',
-                //     className: "Phát triển ứng dụng Web",
-                //     totalStudent: 50,
-                //     isComplete: true,
-                //     semester_id: 20182019,
-                // },
-                // {
-                //     classId: 'INT6969 2',
-                //     className: "Kho dữ liệu",
-                //     totalStudent: 100,
-                //     isComplete: false,
-                //     semester_id: 20172019,
-                // },
-                // {
-                //     classId: 'INT1234 5',
-                //     className: "Thiết kế giao diện người dùng",
-                //     totalStudent: 140,
-                //     isComplete: false,
-                //     semester_id: 20182019,
-                // },
-                // {
-                //     classId: 'INT5555 2',
-                //     className: "Trí tuệ nhân tạo",
-                //     totalStudent: 30,
-                //     isComplete: true,
-                //     semester_id: 20182019,
-                // },
-            ],
+            semester_id: 1,
+            listClass: [],
             role: decode(localStorage.getItem('id_token')).role
         };
     }
 
-    
+    componentDidMount() {
+        let token = localStorage.getItem('id_token');
+        fetch(API_allClass, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify({ 'semester_id': this.state.semester_id })
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    listClass: response.map(subject => ({
+                        classId: subject.semantic_class_id,
+                        className: subject.className,
+                        semester_id: subject.semester_id,
+                        _id: subject._id,
+                    }))
+                });
+                console.log(response);
+                this.props.handleFromPage(this.state.listClass);
+            })
+            .catch(error => console.log('Loi', error));
+    }
+
     render() {
         switch (this.state.role) {
             case 'admin': return (
@@ -66,7 +66,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </div>
-                    <ClassList />
+                    <ClassList listClass={this.state.listClass} />
                 </div>
             );
             case 'student': return (
@@ -79,7 +79,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </div>
-                    <ClassList />
+                    <ClassList listClass={this.state.listClass} />
                 </div>
             );
             case 'lecturer': return (
@@ -92,7 +92,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </div>
-                    <ClassList />
+                    <ClassList listClass={this.state.listClass}/>
                 </div>
             );
         };

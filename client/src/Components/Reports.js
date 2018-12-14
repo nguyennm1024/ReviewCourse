@@ -120,7 +120,8 @@ class Reports extends Component {
                 </td>
             </tr>
         );
-
+        let show = this.props.show ? "in" : "";
+        let display = this.props.show ? "block" : "none";
         return (
             <div className="row">
                 <div className="col-lg-12">
@@ -149,6 +150,44 @@ class Reports extends Component {
                 </div>
                 <button onClick={this.handleInputChange}>xxx</button>
             </div>
+            // <div className={"modal fade " + show} role="dialog" style={{display: display }}>
+            //     <div className="modal-dialog">
+            //         <div className="modal-content">
+            //             <div className="modal-header text-center">
+            //                 <button type="button" className="close" data-dismiss="modal">&times;</button>
+            //                 <h4 className="modal-title">Toán rời rạc INT1003 1</h4>
+            //             </div>
+
+            //             <div className="modal-body">
+            //                 <GroupSurvey
+            //                     groupName="1.* Cơ sở vật chất"
+            //                     listGroup={listSurveys.slice(0, 2)}
+            //                 />
+
+            //                 <GroupSurvey
+            //                     groupName="2.* Môn học"
+            //                     listGroup={listSurveys.slice(2, 7)}
+            //                 />
+
+            //                 <GroupSurvey
+            //                     groupName="3.* Hoạt động giảng dạy của giảng viên"
+            //                     listGroup={listSurveys.slice(7)}
+            //                 />
+            //             </div>
+
+            //             <div className="modal-footer">
+            //                 <button 
+            //                     onClick={this.handleInputChange} 
+            //                     type="button" 
+            //                     className="btn btn-primary" 
+            //                     data-dismiss="modal"
+            //                 >
+            //                     Close
+            //                 </button>
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>
         );
     }
 }
@@ -163,4 +202,5 @@ const GroupSurvey = (props) =>
             </tbody>
         </table>
     </div>
+    
 export default Reports;

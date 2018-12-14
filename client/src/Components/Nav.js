@@ -14,7 +14,7 @@ class Nav extends Component {
           <li className="dropdown"></li>
         </ul>
 
-        <Sidebar />
+        <Sidebar role={this.props.role}/>
       </nav>
     );
   }

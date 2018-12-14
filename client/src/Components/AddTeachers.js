@@ -23,7 +23,7 @@ class AddTeachers extends Component {
                 if (worksheet[XLSX.utils.encode_cell({ c: 1, r: row })] === undefined) break;
                 let teacher = {
                     userName: worksheet[XLSX.utils.encode_cell({ c: 1, r: row })].v,
-                    password: worksheet[XLSX.utils.encode_cell({ c: 2, r: row })].v,
+                    password: worksheet[XLSX.utils.encode_cell({ c: 2, r: row })].v.toString(),
                     name: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
                     mail: worksheet[XLSX.utils.encode_cell({ c: 4, r: row })].v,
                 };
@@ -36,7 +36,7 @@ class AddTeachers extends Component {
     addTeachers() {
         let token = localStorage.getItem('id_token');
         let list = this.state.teachers;
-
+        console.log(list);
         for (let i = 0; i < list.length; i++) {
             fetch(API_addTeacher, {
                 method: "POST",

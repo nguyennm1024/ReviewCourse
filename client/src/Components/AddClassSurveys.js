@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import XLSX from 'xlsx';
+import Reports from './Reports';
 
 const API_addClassSurvey = "http://localhost:5000/api/admin/createReport";
+
+const display = {
+    display: 'block'
+};
+
+const hide = {
+    display: 'none'
+};
 
 class AddClassSurveys extends Component {
     constructor(props) {
@@ -14,15 +23,17 @@ class AddClassSurveys extends Component {
             teacherName: "",
             teacherId: 0,
             listStudent: [],
+            toggle: false,
         };
         this.addFromExcel = this.addFromExcel.bind(this);
         this.addClassSurvey = this.addClassSurvey.bind(this);
+        this.toggle = this.toggle.bind(this);
     }
 
     async addClassSurvey() {
         let token = localStorage.getItem("id_token");
         let list = this.state.listStudent;
-
+        console.log(this.state);
         for (let i = 0; i < list.length; i++) {
             const response = await fetch(API_addClassSurvey, {
                 method: "POST",
@@ -45,6 +56,7 @@ class AddClassSurveys extends Component {
             })
             response = response.json();
         }
+        // alert('huhu');
     }
 
     addFromExcel(event) {
@@ -76,6 +88,10 @@ class AddClassSurveys extends Component {
         reader.readAsBinaryString(file);
     }
 
+    toggle() {
+        this.setState({ toggle: !this.state.toggle });
+    }
+
     render() {
         let listStudents = this.state.listStudent.map((student, index) =>
             <tr key={student.MSSV}>
@@ -84,52 +100,82 @@ class AddClassSurveys extends Component {
                 <td>{student.name}</td>
                 <td>{student.birth}</td>
                 <td>{student.classRoom}</td>
-                <td><Link to="/report"><button className="btn btn-secondary">Phiếu</button></Link></td>
+                <td>
+                    {/* <Link to="/report"> */}
+                    <button className="btn btn-secondary" onClick={this.toggle}>
+                        Phiếu
+                    </button>
+                    {/* </Link> */}
+
+                </td>
             </tr>
         );
         return (
-            <div>
-                <Header title="Lớp khảo sát" />
-                <div className="row">
-                    <div className="col-lg-12">
-                        <div className="panel panel-default">
-                            <div className="panel-heading">
-                                <label className="btn btn-primary btn-file">
-                                    Thêm từ tệp Excel
+            <div className={this.state.toggle ? "modal-open" : ""}>
+                <div>
+                    <Header title="Lớp khảo sát" />
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <div className="panel panel-default">
+                                <div className="panel-heading">
+                                    <label className="btn btn-primary btn-file">
+                                        Thêm từ tệp Excel
                                     <input
-                                        type="file"
-                                        onChange={this.addFromExcel}
-                                        style={{ display: "none", }}
-                                    />
-                                </label>
-                            </div>
-
-                            <div className="panel-body">
-                                <div className="col-lg-12">
-                                    {this.state.name} <br />
-                                    Năm học: {this.state.semester_id}<br />
-                                    Giảng viên: {this.state.teacherName}<br />
-                                    Lớp môn học: {this.state.subject_id}
+                                            type="file"
+                                            onChange={this.addFromExcel}
+                                            style={{ display: "none", }}
+                                        />
+                                    </label>
                                 </div>
-                                <table width="100%" className="table table-striped table-bordered table-hover">
-                                    {headerTable}
-                                    <tbody>
-                                        {listStudents}
-                                    </tbody>
-                                </table>
-                            </div>
 
-                            <div className="panel-footer">
-                                <input
-                                    type="button"
-                                    value="Thêm lớp khảo sát"
-                                    className="btn btn-primary"
-                                    onClick={this.addClassSurvey}
-                                />
+                                <div className="panel-body">
+                                    <div className="col-lg-12">
+                                        {this.state.name} <br />
+                                        Năm học: {this.state.semester_id}<br />
+                                        Giảng viên: {this.state.teacherName}<br />
+                                        Lớp môn học: {this.state.subject_id}
+                                    </div>
+                                    <table className="table table-striped table-bordered table-hover" width="100%">
+                                        {headerTable}
+                                        <tbody>
+                                            {listStudents}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="panel-footer">
+                                    <input
+                                        type="button"
+                                        value="Thêm lớp khảo sát"
+                                        className="btn btn-primary"
+                                        onClick={this.addClassSurvey}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div className={"modal fade " + (this.state.toggle ? "in" : "")} role='dialog' style={this.state.toggle ? display : hide}>
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button className="close" onClick={this.toggle}>&times;</button>
+                                    <h4 className="modal-title"></h4>
+                                </div>
+
+                                <div className="modal-body">
+                                    <Reports />
+                                </div>
+
+                                <div className="modal-footer">
+                                    <button className="btn btn-default" onClick={this.toggle}>Close</button>
+                                    <button className="btn btn-default" onClick={this.toggle}>Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {this.state.toggle ? <div className="modal-backdrop fade in" onClick={this.toggle} /> : <div />}
                 </div>
+
             </div>
         );
     }

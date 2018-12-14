@@ -35,13 +35,12 @@ class AddStudents extends Component {
         reader.readAsBinaryString(file);  
     }
 
-    addStudents(){
+    async addStudents(){
       let token = localStorage.getItem('id_token');
       let list = this.state.students;
 
       for(let i = 0; i < list.length; i++) {
-        console.log(list[i]);
-        fetch(API_addStudent, {
+        const response = await fetch(API_addStudent, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
@@ -53,13 +52,12 @@ class AddStudents extends Component {
             'password': list[i].password,
             'studentName': list[i].name,
             'classRoom': list[i].classRoom,
-            'semester_id': 2,
+            'semester_id': 1,
           })
         })
-        .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(err => console.log("Loi" + err));
+        response = response.json();
       }
+      
     }
 
     handleChange(e) {
