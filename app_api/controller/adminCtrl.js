@@ -288,6 +288,7 @@ const addClassToStudent = async (mail,MSSV, classRoom, semester_id, semantic_cla
         myStudent.classRoom = classRoom,
         myStudent.semester_id = semester_id
         myStudent.studentName = studentName
+        myStudent.role = 'student'
         await myStudent.save();
     }
     const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
@@ -313,6 +314,7 @@ const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturer
         myLecturer.password = DEFAULT_PASSWORD;
         myLecturer.semester_id = semester_id
         myLecturer.lecturerName = lecturerName
+        myLecturer.role = 'lecture'
         await Lecturer.create(myLecturer)
     }
     const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
@@ -342,6 +344,7 @@ const addStudentToClass = async (semester_id, semantic_class_id, subject_id, cla
         student_check.classRoom = classRoom
         student_check.semester_id = semester_id
         student_check.studentName = studentName
+        student_check.role ='student'
         await student_check.save()
     }
     const find_class = await Class.findOne({semester_id, semantic_class_id}).exec();
