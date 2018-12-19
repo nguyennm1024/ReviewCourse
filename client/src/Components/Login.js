@@ -8,7 +8,6 @@ class Login extends Component {
         this.state = {
             user: "",
             password: "",
-            redirectToReferrer: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,6 +22,7 @@ class Login extends Component {
     }
 
     handleSubmit(e) {
+        console.log(this.props);
         e.preventDefault();
         this.Auth.login(this.state.user, this.state.password)
             .then(res => {

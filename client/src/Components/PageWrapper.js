@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import decode from 'jwt-decode';
 import AddClassSurveys from './AddClassSurveys';
 import ClassInfo from './ClassInfo';
 import AllStudents from './AllStudents';
@@ -17,19 +16,36 @@ import Reports from './Reports';
 class PageWrapper extends Component {
     constructor(props) {
         super(props);
-        this.state = { role: decode(localStorage.getItem('id_token')).role };
+        this.state = {
+            list: [],
+        }
+        this.handleData = this.handleData.bind(this);
+    }
+
+    handleData(data) {
+        this.setState({ list: data });
     }
 
     render() {
-        switch (this.state.role) {
+        switch (this.props.role) {
             case 'admin': return (
-                <div id="page-wrapper" >
+                <div id="page-wrapper">
                     <Switch>
-                        <Route exact path="/" component={Dashboard} />
+                        <Route exact path="/" render={() => <Dashboard roleUser={'admin'} handleFromPage={this.handleData} />} />
 
-                        <Route path="/dashboard" component={Dashboard} />
+                        <Route path="/dashboard" render={() => <Dashboard roleUser={'admin'} handleFromPage={this.handleData} />} />
 
-                        <Route path="/classInfo" component={ClassInfo} />
+                        {/* <Route path="/classInfo" render={() => <ClassInfo roleUser={'admin'} />} /> */}
+
+                        {this.state.list.map(route => 
+                            <Route 
+                                key={route.classId}
+                                path={"/infoClass" + route.classId}
+                                render={() => 
+                                    <ClassInfo class_id={route._id} />
+                                }
+                            />    
+                        )}
 
                         <Route path="/addClassSurvey" component={AddClassSurveys} />
 
@@ -45,18 +61,19 @@ class PageWrapper extends Component {
 
                         <Route path="/deleteTeachers" component={DeleteTeachers} />
 
-                        <Route path="/surveyResult" component={SurveyResult} />
+                        <Route path="/surveyResult" render={() => <SurveyResult roleUser={'admin'} />} />
 
-                        <Route path="/report" component={Reports} />
+                        {/* <Route path="/report" render={() => <Reports roleUser={'admin'} />} /> */}
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>
                 </div>
             );
+
             case 'student': return (
                 <div id="page-wrapper" >
                     <Switch>
-                        <Route exact path="/" component={Dashboard} />
+                        <Route exact path="/" render={() => <Dashboard roleUser={'student'} />} />
 
                         <Route path="/reportClass"/>
 
@@ -64,12 +81,13 @@ class PageWrapper extends Component {
                     </Switch>
                 </div>
             );
+
             case 'lecturer': return (
                 <div id="page-wrapper" >
                     <Switch>
-                        <Route exact path="/" component={Dashboard} />
+                        <Route exact path="/" render={() => <Dashboard roleUser={'lecturer'} />} />
 
-                        <Route path="/classInfo" component={ClassInfo} />
+                        <Route path="/classInfo" render={() => <ClassInfo roleUser={'lecturer'} />} />
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>
@@ -78,4 +96,5 @@ class PageWrapper extends Component {
         }
     }
 }
+
 export default PageWrapper;

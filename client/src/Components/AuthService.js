@@ -45,10 +45,6 @@ export default class AuthService {
         return localStorage.getItem('id_token')
     }
 
-    logout() {
-        localStorage.removeItem('id_token');
-    }
-
     getProfile() {
         return decode(this.getToken());
     }
