@@ -616,10 +616,123 @@ const calculateSTD1 = async (generalReport, class_id) => {
     std1 = 0;
 }
 
-// const calculateM2 = async (generalReport, subject_id, semester_id) => {
-//     let myReports = await Report.find({subject_id, semester_id}).exec();
-//     let std2 = 0;
-// }
+const calculateM2 = async (generalReport, subject_id, semester_id) => {
+    let myReports = await Report.find({subject_id, semester_id}).exec();
+    let scoreAvg = 0;
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangDuong;
+    });
+    generalReport.giangDuong.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.trangThietBi;
+    });
+    generalReport.trangThietBi.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.hoTroKipThoi;
+    });
+    generalReport.hoTroKipThoi.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.mucTieuMonHoc;
+    });
+    generalReport.mucTieuMonHoc.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.thoiLuongMonHoc;
+    });
+    generalReport.thoiLuongMonHoc.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.taiLieu;
+    });
+    generalReport.taiLieu.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.trangBiKienThuc;
+    });
+    generalReport.trangBiKienThuc.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienThucHienDayDu;
+    });
+    generalReport.giangVienThucHienDayDu.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienHuongDanBatDauMonHoc;
+    });
+    generalReport.giangVienHuongDanBatDauMonHoc.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.phuongPhapGiangDay;
+    });
+    generalReport.phuongPhapGiangDay.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienTaoCoHoi;
+    });
+    generalReport.giangVienTaoCoHoi.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienGiupDocLap;
+    });
+    generalReport.giangVienGiupDocLap.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienThucTien;
+    });
+    generalReport.giangVienThucTien.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienSuDungCongCu;
+    });
+    generalReport.giangVienSuDungCongCu.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienGiaoDucTuCachNguoiHoc;
+    });
+    generalReport.giangVienGiaoDucTuCachNguoiHoc.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.hieuBai;
+    });
+    generalReport.hieuBai.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.cachDanhGia;
+    });
+    generalReport.cachDanhGia.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.noiDungDanhGia;
+    });
+    generalReport.noiDungDanhGia.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.tacDungThongTinPhanHoi;
+    });
+    generalReport.tacDungThongTinPhanHoi.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+}
 
 const generalReport = async (req, res) => {
     const {class_id} = req.body;
