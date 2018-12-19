@@ -7,7 +7,7 @@ const reportSchema = new Schema({
     class_id: {type: Schema.Types.ObjectId, ref: 'class'},
     subject_id:{type: String, required: true},
     semester_id:{type: String, required: true},
-    //lecturerMail:{type: String, required: true},
+    lecturerName:{type: String, required: true},
     giangDuong: {type: Number, default: 0},
     trangThietBi: {type: Number, default: 0},
     hoTroKipThoi:{type: Number, default:0},

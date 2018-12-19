@@ -191,7 +191,8 @@ const studentInClass = async (req, res) => {
     if(!classSelected) return res.status(400).json({message:'Class not found'})
 
     let students = await Class.findOne({_id}).populate('listStudent').exec();
-    return res.status(200).json(students);
+    let lecturers = await Class.findOne({_id}).populate('lecturer_id').exec()
+    return res.status(200).json(students, lecturers);
 }
 
 const getStudentReport = async (req,res) => {
@@ -614,6 +615,11 @@ const calculateSTD1 = async (generalReport, class_id) => {
     generalReport.tacDungThongTinPhanHoi.STD1 = Math.sqrt(std1*1.0/myReports.length);
     std1 = 0;
 }
+
+// const calculateM2 = async (generalReport, subject_id, semester_id) => {
+//     let myReports = await Report.find({subject_id, semester_id}).exec();
+//     let std2 = 0;
+// }
 
 const generalReport = async (req, res) => {
     const {class_id} = req.body;
