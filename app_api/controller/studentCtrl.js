@@ -4,7 +4,7 @@ const Lecturer = require('../model/lecturer')
 const Class = require('../model/class')
 const Report = require('../model/report')
 
-const getClass = async (req,res) => {
+const allClass = async (req,res) => {
     const {_id} = req.body;
     if(!_id) return res.status(400).json({message: "Student ID is required"});
     let studentClass = await Student.findOne({_id}).populate('classRegistered').exec();
@@ -60,6 +60,6 @@ const postReport = async (req,res) => {
         })
     })
 } 
-module.exports = {getClass,
+module.exports = {allClass,
     getReport,
     postReport};

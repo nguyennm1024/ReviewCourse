@@ -7,7 +7,7 @@ const authMiddleware = require('express-jwt')({
     secret: 'JWT_SECRET'
 });
 //getClass
-route.post('/getClass',authMiddleware ,(req,res) => {
+route.post('/allClass',authMiddleware ,(req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -18,7 +18,7 @@ route.post('/getClass',authMiddleware ,(req,res) => {
     jwt.verify(token, "JWT_SECRET", (err, authData) => {
         if(err) return res.status(403).json({message:"Token error"});
         if(authData.role === "student")
-            studentCtrl.getClass(req,res);
+            studentCtrl.allClass(req,res);
         else return res.status(403).json({message:"You are not student"});
     })
 });
