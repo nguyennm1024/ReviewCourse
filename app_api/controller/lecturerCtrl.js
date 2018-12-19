@@ -11,4 +11,13 @@ const allClass = async (req, res) => {
     return res.status(200).json(lecturerClass);
 }
 
-module.exports = {allClass};
+const studentInClass = async (req, res) => {
+    const {_id} = req.body;
+    let classSelected = await Class.findOne({_id}).exec();
+    if(!classSelected) return res.status(400).json({message:'Class not found'})
+
+    let students = await Class.findOne({_id}).populate('listStudent').exec();
+    return res.status(200).json(students);
+}
+
+module.exports = {allClass, studentInClass};
