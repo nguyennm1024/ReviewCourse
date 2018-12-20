@@ -341,7 +341,7 @@ const addLecturerToClass = async (semantic_class_id, semester_id, mail, lecturer
         myLecturer.password = DEFAULT_PASSWORD;
         myLecturer.semester_id = semester_id
         myLecturer.lecturerName = lecturerName
-        myLecturer.role = 'lecture'
+        myLecturer.role = 'lecturer'
         await Lecturer.create(myLecturer)
     }
     const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
