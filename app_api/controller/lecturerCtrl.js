@@ -16,8 +16,10 @@ const studentInClass = async (req, res) => {
     let classSelected = await Class.findOne({_id}).exec();
     if(!classSelected) return res.status(400).json({message:'Class not found'})
 
-    let students = await Class.findOne({_id}).populate('listStudent').exec();
-    return res.status(200).json(students);
+    let students = await Class.findOne({_id}).populate('listStudent').populate('lecturer_id').exec();
+    listStudent = students.listStudent;
+    lecturers = students.lecturer_id;
+    return res.status(200).json({"listStudent":listStudent, "lecturer": lecturers});
 }
 
 module.exports = {allClass, studentInClass};
