@@ -29,7 +29,8 @@ const reports = [{
     semester_id:5,
     subject_id:'INT3307',
     student_id:'5bf8538e335556137a382880',
-    class_id:'5bf8681c9468451caa7d901e'
+    class_id:'5bf8681c9468451caa7d901e',
+    lecturerName: 'Le Dinh Thanh'
 }]
 
 const students = [{

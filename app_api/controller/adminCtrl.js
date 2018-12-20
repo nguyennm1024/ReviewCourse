@@ -190,9 +190,10 @@ const studentInClass = async (req, res) => {
     let classSelected = await Class.findOne({_id}).exec();
     if(!classSelected) return res.status(400).json({message:'Class not found'})
 
-    let students = await Class.findOne({_id}).populate('listStudent').exec();
-    let lecturers = await Class.findOne({_id}).populate('lecturer_id').exec()
-    return res.status(200).json(students, lecturers);
+    let students = await Class.findOne({_id}).populate('listStudent').populate('lecturer_id').exec();
+    listStudent = students.listStudent;
+    lecturers = students.lecturer_id;
+    return res.status(200).json({"listStudent":listStudent, "lecturer": lecturers});
 }
 
 const getReport = async (req,res) => {
@@ -333,7 +334,24 @@ const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturer
 }
 
 const addLecturerToClass = async (semantic_class_id, semester_id, mail, lecturerName, subject_id,className) => {
-    
+    let lecturer_check = await Lecturer.findOne({mail,semester_id})
+    if(!lecturer_check) {
+        const myLecturer = new Lecturer();
+        myLecturer.mail = mail;
+        myLecturer.password = DEFAULT_PASSWORD;
+        myLecturer.semester_id = semester_id
+        myLecturer.lecturerName = lecturerName
+        myLecturer.role = 'lecture'
+        await Lecturer.create(myLecturer)
+    }
+    const class_check = await Class.findOne({semantic_class_id, semester_id}).exec()
+    if(!class_check) await createClass(subject_id, semester_id, semantic_class_id, className)
+    let myClass = await Class.findOne({semantic_class_id, semester_id}).exec()
+    readLecturer = await Lecturer.findOne({mail, semester_id})
+    if(myClass) {
+        myClass.lecturer_id = readLecturer._id;
+        await myClass.save();
+    }
 }
 const addStudentToClass = async (semester_id, semantic_class_id, subject_id, className, mail, classRoom, MSSV, studentName) => {
     let class_check = await Class.findOne({semester_id, semantic_class_id})
@@ -365,6 +383,7 @@ const createReport = async (req,res) => {
     await addClassToLecturer(semantic_class_id, semester_id,lecturerMail, lecturerName, subject_id, className)
     await addClassToStudent(studentMail, MSSV, classRoom, semester_id, semantic_class_id, subject_id, studentName, className);
     await addStudentToClass(semester_id, semantic_class_id, subject_id, className, studentMail, classRoom, MSSV, studentName);
+    await addLecturerToClass(semantic_class_id, semester_id, lecturerMail, lecturerName, subject_id, className)
     let mail = studentMail;
     let find_student = await Student.findOne({mail}).exec();
     let find_class = await Class.findOne({semantic_class_id, semester_id}).exec();
@@ -377,6 +396,7 @@ const createReport = async (req,res) => {
             newReport.class_id = find_class._id;
             newReport.subject_id = find_class.subject_id
             newReport.semester_id = semester_id
+            newReport.lecturerName = lecturerName
             await newReport.save();
             return res.status(200).json({message:'success'});
         }
