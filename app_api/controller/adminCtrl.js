@@ -1145,6 +1145,18 @@ const generalReport = async (req, res) => {
     return res.status(200).json(genReport);
 }
 
+const changePassword = async (req,res) => {
+    const {mail,password} = req.body;
+    students = await Student.find({mail});
+    students.forEach(element => {
+        element._hashAlready = false;
+        element.password = password;
+    })
+    await students.save(err => {
+        if(!err)
+            return res.status(200).json("success");
+    })
+}
 module.exports = {updateInfo,
     allStudent,
     allLecture,
@@ -1160,4 +1172,5 @@ module.exports = {updateInfo,
     createReport,
     generalReport,
     updateInfoStudent,
-    updateInfoLecturer};
+    updateInfoLecturer,
+    changePassword};
