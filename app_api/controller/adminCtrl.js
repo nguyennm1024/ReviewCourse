@@ -100,14 +100,12 @@ const updateInfoStudent = (req, res) => {
     const {studentName, phoneNumber, password, MSSV, birth, classRoom, semester_id, classRegistered} = req.body;
     if(!studentName) return res.status(400).json({message: "Name is required"});
     if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
-    if(!password) res.status(400).json({message:"Password is required"});
 
     Student.findOne({mail}, (err, student) =>{
         if(err) return res.status(400).json({err});
         if(!student) return res.status(400).json({message: 'no student founded'});
 
         student.mail =mail;
-        student.password = password;
         student.MSSV = MSSV;
         student.studentName = studentName;
         student.birth = birth;
@@ -115,7 +113,31 @@ const updateInfoStudent = (req, res) => {
         student.phoneNumber = phoneNumber;
         student.semester_id = semester_id;
         student.classRegistered = classRegistered;
+
         student.save(e => {
+            if(e) return res.status(400).json(e);
+
+            return res.status(200).json({message: 'success'});
+        })
+    })
+}
+
+const updateInfoLecturer = (req, res) => {
+    const {mail} = req.body;
+    const {lecturerName, birthday, phoneNumber, note} = req.body;
+    if(!mail) return res.status(400).json({message: "Mail is required"});    
+    if(!lecturerName) return res.status(400).json({message: "Name is required"});
+    if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
+
+    Lecturer.findOne({mail}, (err, lecturer) =>{
+        if(err) return res.status(400).json({err});
+        if(!lecturer) return res.status(400).json({message: 'no lecturer founded'});
+
+        lecturer.mail =mail;
+        lecturer.birthday = birthday;
+        lecturer.phoneNumber = phoneNumber;
+        lecturer.note = note
+        lecturer.save(e => {
             if(e) return res.status(400).json(e);
 
             return res.status(200).json({message: 'success'});
@@ -876,13 +898,250 @@ const calculateSTD2 = async (generalReport, subject_id, semester_id) => {
     std1 = 0;
 }
 
+const calculateM3 = async (generalReport, lecturerName, semester_id) => {
+    let myReports = await Report.find({lecturerName, semester_id}).exec();
+    let scoreAvg = 0;
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangDuong;
+    });
+    generalReport.giangDuong.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.trangThietBi;
+    });
+    generalReport.trangThietBi.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.hoTroKipThoi;
+    });
+    generalReport.hoTroKipThoi.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.mucTieuMonHoc;
+    });
+    generalReport.mucTieuMonHoc.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.thoiLuongMonHoc;
+    });
+    generalReport.thoiLuongMonHoc.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.taiLieu;
+    });
+    generalReport.taiLieu.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.trangBiKienThuc;
+    });
+    generalReport.trangBiKienThuc.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienThucHienDayDu;
+    });
+    generalReport.giangVienThucHienDayDu.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienHuongDanBatDauMonHoc;
+    });
+    generalReport.giangVienHuongDanBatDauMonHoc.M2 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.phuongPhapGiangDay;
+    });
+    generalReport.phuongPhapGiangDay.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienTaoCoHoi;
+    });
+    generalReport.giangVienTaoCoHoi.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienGiupDocLap;
+    });
+    generalReport.giangVienGiupDocLap.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienThucTien;
+    });
+    generalReport.giangVienThucTien.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienSuDungCongCu;
+    });
+    generalReport.giangVienSuDungCongCu.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.giangVienGiaoDucTuCachNguoiHoc;
+    });
+    generalReport.giangVienGiaoDucTuCachNguoiHoc.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.hieuBai;
+    });
+    generalReport.hieuBai.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.cachDanhGia;
+    });
+    generalReport.cachDanhGia.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.noiDungDanhGia;
+    });
+    generalReport.noiDungDanhGia.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+    myReports.forEach(element => {
+        scoreAvg = scoreAvg + element.tacDungThongTinPhanHoi;
+    });
+    generalReport.tacDungThongTinPhanHoi.M3 = scoreAvg*1.0/myReports.length;
+    scoreAvg = 0;
+
+}
+
+const calculateSTD3 = async (generalReport, lecturerName, semester_id) => {
+    let myReports = await Report.find({lecturerName, semester_id}).exec();
+    let std1 = 0;
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangDuong.M3 - element.giangDuong)*(generalReport.giangDuong.M3 - element.giangDuong);
+    });
+    generalReport.giangDuong.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.trangThietBi.M3 - element.trangThietBi)*(generalReport.trangThietBi.M3 - element.trangThietBi);
+    });
+    generalReport.trangThietBi.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.hoTroKipThoi.M3 - element.hoTroKipThoi)*(generalReport.hoTroKipThoi.M3 - element.hoTroKipThoi);
+    });
+    generalReport.hoTroKipThoi.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.mucTieuMonHoc.M3 - element.mucTieuMonHoc)*(generalReport.mucTieuMonHoc.M3 - element.mucTieuMonHoc);
+    });
+    generalReport.mucTieuMonHoc.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.thoiLuongMonHoc.M3 - element.thoiLuongMonHoc)*(generalReport.thoiLuongMonHoc.M3 - element.thoiLuongMonHoc);
+    });
+    generalReport.thoiLuongMonHoc.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.taiLieu.M3 - element.taiLieu)*(generalReport.taiLieu.M3 - element.taiLieu);
+    });
+    generalReport.taiLieu.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.trangBiKienThuc.M3 - element.trangBiKienThuc)*(generalReport.trangBiKienThuc.M3 - element.trangBiKienThuc);
+    });
+    generalReport.trangBiKienThuc.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienThucHienDayDu.M3 - element.giangVienThucHienDayDu)*(generalReport.giangVienThucHienDayDu.M3 - element.giangVienThucHienDayDu);
+    });
+    generalReport.giangVienThucHienDayDu.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienHuongDanBatDauMonHoc.M3 - element.giangVienHuongDanBatDauMonHoc)*(generalReport.giangVienHuongDanBatDauMonHoc.M3 - element.giangVienHuongDanBatDauMonHoc);
+    });
+    generalReport.giangVienHuongDanBatDauMonHoc.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.phuongPhapGiangDay.M3 - element.phuongPhapGiangDay)*(generalReport.phuongPhapGiangDay.M3 - element.phuongPhapGiangDay);
+    });
+    generalReport.phuongPhapGiangDay.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienTaoCoHoi.M3 - element.giangVienTaoCoHoi)*(generalReport.giangVienTaoCoHoi.M3 - element.giangVienTaoCoHoi);
+    });
+    generalReport.giangVienTaoCoHoi.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienGiupDocLap.M3 - element.giangVienGiupDocLap)*(generalReport.giangVienGiupDocLap.M3 - element.giangVienGiupDocLap);
+    });
+    generalReport.giangVienGiupDocLap.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienThucTien.M3 - element.giangVienThucTien)*(generalReport.giangVienThucTien.M3 - element.giangVienThucTien);
+    });
+    generalReport.giangVienThucTien.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienSuDungCongCu.M3 - element.giangVienSuDungCongCu)*(generalReport.giangVienSuDungCongCu.M3 - element.giangVienSuDungCongCu);
+    });
+    generalReport.giangVienSuDungCongCu.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienGiaoDucTuCachNguoiHoc.M3 - element.giangVienGiaoDucTuCachNguoiHoc)*(generalReport.giangVienGiaoDucTuCachNguoiHoc.M3 - element.giangVienGiaoDucTuCachNguoiHoc);
+    });
+    generalReport.giangVienGiaoDucTuCachNguoiHoc.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.hieuBai.M3 - element.hieuBai)*(generalReport.hieuBai.M3 - element.hieuBai);
+    });
+    generalReport.hieuBai.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.cachDanhGia.M3 - element.cachDanhGia)*(generalReport.cachDanhGia.M3 - element.cachDanhGia);
+    });
+    generalReport.cachDanhGia.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.noiDungDanhGia.M3 - element.noiDungDanhGia)*(generalReport.noiDungDanhGia.M3 - element.noiDungDanhGia);
+    });
+    generalReport.noiDungDanhGia.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.tacDungThongTinPhanHoi.M3 - element.tacDungThongTinPhanHoi)*(generalReport.tacDungThongTinPhanHoi.M3 - element.tacDungThongTinPhanHoi);
+    });
+    generalReport.tacDungThongTinPhanHoi.STD3 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+}
 const generalReport = async (req, res) => {
-    const {class_id, subject_id, semester_id} = req.body;
+    const {class_id, subject_id, semester_id, lecturerName} = req.body;
     let genReport = new GeneralReport();
     await calculateM1(genReport, class_id);
     await calculateSTD1(genReport, class_id);
     await calculateM2(genReport, subject_id, semester_id);
     await calculateSTD2(genReport, subject_id, semester_id);
+    await calculateM3(genReport, lecturerName, semester_id);
+    await calculateSTD3(genReport, lecturerName, semester_id);
     return res.status(200).json(genReport);
 }
 
@@ -899,4 +1158,6 @@ module.exports = {updateInfo,
     updateReport,
     setReportToDefault,
     createReport,
-    generalReport};
+    generalReport,
+    updateInfoStudent,
+    updateInfoLecturer};
