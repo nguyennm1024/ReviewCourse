@@ -190,13 +190,12 @@ const studentInClass = async (req, res) => {
     let classSelected = await Class.findOne({_id}).exec();
     if(!classSelected) return res.status(400).json({message:'Class not found'})
 
-    let students = await Class.findOne({_id}).populate('listStudent').populate('lecturer_id').exec();
-    // return res.status(200).json(students);
-    //let lecturers = await Class.findOne({_id}).populate('lecturer_id').exec()
-    return res.status(200).json(students);
+    let students = await Class.findOne({_id}).populate('listStudent').exec();
+    let lecturers = await Class.findOne({_id}).populate('lecturer_id').exec()
+    return res.status(200).json(students, lecturers);
 }
 
-const getStudentReport = async (req,res) => {
+const getReport = async (req,res) => {
     const {student_id,class_id} = req.body;
     if(!student_id) return res.status(400).json({message: 'Student_id is required'});
     if(!class_id) return res.status(400).json({message:'Class_id is required'});
@@ -331,6 +330,10 @@ const addClassToLecturer = async (semantic_class_id, semester_id, mail, lecturer
     if(check_select === -1)
         readLecturer.teachingClass.push(myClass._id)
     await readLecturer.save();}
+}
+
+const addLecturerToClass = async (semantic_class_id, semester_id, mail, lecturerName, subject_id,className) => {
+    
 }
 const addStudentToClass = async (semester_id, semantic_class_id, subject_id, className, mail, classRoom, MSSV, studentName) => {
     let class_check = await Class.findOne({semester_id, semantic_class_id})
@@ -735,11 +738,131 @@ const calculateM2 = async (generalReport, subject_id, semester_id) => {
 
 }
 
+const calculateSTD2 = async (generalReport, subject_id, semester_id) => {
+    let myReports = await Report.find({subject_id, semester_id}).exec();
+    let std1 = 0;
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangDuong.M2 - element.giangDuong)*(generalReport.giangDuong.M2 - element.giangDuong);
+    });
+    generalReport.giangDuong.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.trangThietBi.M2 - element.trangThietBi)*(generalReport.trangThietBi.M2 - element.trangThietBi);
+    });
+    generalReport.trangThietBi.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.hoTroKipThoi.M2 - element.hoTroKipThoi)*(generalReport.hoTroKipThoi.M2 - element.hoTroKipThoi);
+    });
+    generalReport.hoTroKipThoi.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.mucTieuMonHoc.M2 - element.mucTieuMonHoc)*(generalReport.mucTieuMonHoc.M2 - element.mucTieuMonHoc);
+    });
+    generalReport.mucTieuMonHoc.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.thoiLuongMonHoc.M2 - element.thoiLuongMonHoc)*(generalReport.thoiLuongMonHoc.M2 - element.thoiLuongMonHoc);
+    });
+    generalReport.thoiLuongMonHoc.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.taiLieu.M2 - element.taiLieu)*(generalReport.taiLieu.M2 - element.taiLieu);
+    });
+    generalReport.taiLieu.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.trangBiKienThuc.M2 - element.trangBiKienThuc)*(generalReport.trangBiKienThuc.M2 - element.trangBiKienThuc);
+    });
+    generalReport.trangBiKienThuc.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienThucHienDayDu.M2 - element.giangVienThucHienDayDu)*(generalReport.giangVienThucHienDayDu.M2 - element.giangVienThucHienDayDu);
+    });
+    generalReport.giangVienThucHienDayDu.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienHuongDanBatDauMonHoc.M2 - element.giangVienHuongDanBatDauMonHoc)*(generalReport.giangVienHuongDanBatDauMonHoc.M2 - element.giangVienHuongDanBatDauMonHoc);
+    });
+    generalReport.giangVienHuongDanBatDauMonHoc.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.phuongPhapGiangDay.M2 - element.phuongPhapGiangDay)*(generalReport.phuongPhapGiangDay.M2 - element.phuongPhapGiangDay);
+    });
+    generalReport.phuongPhapGiangDay.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienTaoCoHoi.M2 - element.giangVienTaoCoHoi)*(generalReport.giangVienTaoCoHoi.M2 - element.giangVienTaoCoHoi);
+    });
+    generalReport.giangVienTaoCoHoi.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienGiupDocLap.M2 - element.giangVienGiupDocLap)*(generalReport.giangVienGiupDocLap.M2 - element.giangVienGiupDocLap);
+    });
+    generalReport.giangVienGiupDocLap.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienThucTien.M2 - element.giangVienThucTien)*(generalReport.giangVienThucTien.M2 - element.giangVienThucTien);
+    });
+    generalReport.giangVienThucTien.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienSuDungCongCu.M2 - element.giangVienSuDungCongCu)*(generalReport.giangVienSuDungCongCu.M2 - element.giangVienSuDungCongCu);
+    });
+    generalReport.giangVienSuDungCongCu.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.giangVienGiaoDucTuCachNguoiHoc.M2 - element.giangVienGiaoDucTuCachNguoiHoc)*(generalReport.giangVienGiaoDucTuCachNguoiHoc.M2 - element.giangVienGiaoDucTuCachNguoiHoc);
+    });
+    generalReport.giangVienGiaoDucTuCachNguoiHoc.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.hieuBai.M2 - element.hieuBai)*(generalReport.hieuBai.M2 - element.hieuBai);
+    });
+    generalReport.hieuBai.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.cachDanhGia.M2 - element.cachDanhGia)*(generalReport.cachDanhGia.M2 - element.cachDanhGia);
+    });
+    generalReport.cachDanhGia.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.noiDungDanhGia.M2 - element.noiDungDanhGia)*(generalReport.noiDungDanhGia.M2 - element.noiDungDanhGia);
+    });
+    generalReport.noiDungDanhGia.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+
+    myReports.forEach(element => {
+        std1 = std1 + (generalReport.tacDungThongTinPhanHoi.M2 - element.tacDungThongTinPhanHoi)*(generalReport.tacDungThongTinPhanHoi.M2 - element.tacDungThongTinPhanHoi);
+    });
+    generalReport.tacDungThongTinPhanHoi.STD2 = Math.sqrt(std1*1.0/myReports.length);
+    std1 = 0;
+}
+
 const generalReport = async (req, res) => {
-    const {class_id} = req.body;
+    const {class_id, subject_id, semester_id} = req.body;
     let genReport = new GeneralReport();
     await calculateM1(genReport, class_id);
     await calculateSTD1(genReport, class_id);
+    await calculateM2(genReport, subject_id, semester_id);
+    await calculateSTD2(genReport, subject_id, semester_id);
     return res.status(200).json(genReport);
 }
 
@@ -752,7 +875,7 @@ module.exports = {updateInfo,
     deleteLecturer,
     allClass,
     studentInClass,
-    getStudentReport,
+    getReport,
     updateReport,
     setReportToDefault,
     createReport,

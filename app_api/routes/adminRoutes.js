@@ -151,7 +151,7 @@ route.post('/studentInClass',authMiddleware, (req,res) => {
     })
 });
 
-route.post('/getStudentReport',authMiddleware, (req,res) => {
+route.post('/getReport',authMiddleware, (req,res) => {
     let bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === 'undefined') {
         return res.status(403).json({message: "Token undefined"});
@@ -162,7 +162,7 @@ route.post('/getStudentReport',authMiddleware, (req,res) => {
     jwt.verify(token, "JWT_SECRET", (err, authData) => {
         if(err) return res.status(403).json({message:"Token error"});
         if(authData.role === "admin")
-            adminCtrl.getStudentReport(req,res);
+            adminCtrl.getReport(req,res);
         else return res.status(403).json({message:"You are not admin"});
     })
 });
