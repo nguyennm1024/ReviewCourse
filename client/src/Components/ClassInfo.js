@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
-import decode from 'jwt-decode';
+import { Link } from 'react-router-dom';
+import Reports from './Reports';
+import Modal from './Modal';
 
-const API_classInfo = "http://localhost:5000/api/admin/studentInClass";
 class ClassInfo extends Component {
     constructor(props) {
         super(props);
@@ -10,19 +10,19 @@ class ClassInfo extends Component {
             className: "",
             semester_id: null,
             classId: "",
-            listStudent: [
-                // {
-                //     MSSV: 16020918,
-                //     name: 'Nguyễn Tùng Dương',
-                //     birth: '08-02-1998',
-                //     classRoom: 'K61-CC',
-                // }
-            ],
-            role: decode(localStorage.getItem('id_token')).role,
+            listStudent: [],
+            toggle: false,
+            studentSelected: null,
         }
+        this.toggle = this.toggle.bind(this);
+    }
+
+    toggle() {
+        this.setState({ toggle: !this.state.toggle });
     }
 
     componentDidMount() {
+        const API_classInfo = `http://localhost:5000/api/${this.props.role}/studentInClass`;
         let token = localStorage.getItem('id_token');
         fetch(API_classInfo, {
             method: 'POST',
@@ -30,10 +30,11 @@ class ClassInfo extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token,
             },
-            body: JSON.stringify({ '_id': this.props.class_id })
+            body: JSON.stringify({ '_id': this.props._id })
         })
             .then(response => response.json())
             .then(response => {
+                console.log(response);
                 this.setState({
                     className: response.className,
                     semester_id: response.semester_id,
@@ -42,18 +43,18 @@ class ClassInfo extends Component {
                         MSSV: student.MSSV,
                         birth: student.birth.toLocaleString(),
                         classRoom: student.classRoom,
-                        name: student.studentName
+                        name: student.studentName,
+                        _id: student._id
                     }))
                 })
+                // console.log(this.state);
             })
             .catch(error => console.log('Loi', error));
-            JSON.stringify({ '_id': this.props.class_id });
     }
 
     render() {
-        console.log(this.props);
         let listStudents;
-        switch (this.state.role) {
+        switch (this.props.role) {
             case 'admin':
                 listStudents = this.state.listStudent.map((student, index) =>
                     <tr key={student.MSSV}>
@@ -63,13 +64,15 @@ class ClassInfo extends Component {
                         <td>{student.birth}</td>
                         <td>{student.classRoom}</td>
                         <td>
-                            <Link to="/report">
                             <button
                                 className="btn btn-secondary"
+                                onClick={ () => this.setState({
+                                    toggle: !this.state.toggle,
+                                    studentSelected: student._id
+                                })}
                             >
                                 Phiếu
                             </button>
-                            </Link>
                         </td>
                     </tr>
                 );
@@ -88,32 +91,44 @@ class ClassInfo extends Component {
         };
 
         return (
-            <div className="row">
-                <div className="col-lg-12">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            {this.state.className} <br />
-                            Năm học: {this.state.semester_id}<br />
-                            Giảng viên: {this.state.teacherName}<br />
-                            Lớp môn học: {this.state.classId}
-                        </div>
+            <div className={this.state.toggle ? "modal-open" : ""}>
+                <div className="row">
+                    <div className="col-lg-12 page-header">
+                        <h3>{this.state.className} {this.state.classId}</h3><br />
+                        Năm học: {this.state.semester_id}<br />
+                        Giảng viên: {this.state.teacherName}<br />
+                        {/* Lớp môn học:  */}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <div className="panel panel-default">
+                            <div className="panel-body">
+                                <table width="100%" className="table table-striped table-bordered table-hover">
+                                    <HeaderTable role={this.props.role} />
+                                    <tbody>
+                                        {listStudents}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                        <div className="panel-body">
-                            <table width="100%" className="table table-striped table-bordered table-hover">
-                                <HeaderTable role={this.state.role} />
-                                <tbody>
-                                    {listStudents}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div className="panel-footer">
-                            <Link to="/surveyResult">
-                                <button className="btn btn-secondary">Kết quả khảo sát</button>
-                            </Link>
+                            <div className="panel-footer">
+                                <Link to="/surveyResult">
+                                    <button className="btn btn-secondary">Kết quả khảo sát</button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {this.state.toggle ? <Modal 
+                    changeToggle={this.toggle} 
+                    _id={this.props._id}
+                    student_id={this.state.studentSelected}
+                    role={this.props.role}
+                /> 
+                    : <div></div>
+                }
             </div>
         );
     }

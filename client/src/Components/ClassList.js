@@ -13,35 +13,8 @@ class ClassList extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     // let data = {'semester_id': this.state.semester_id};
-    //     let token = localStorage.getItem('id_token');
-    //     let url = "http://localhost:5000/api/admin/allClass";
-    //     fetch(url, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + token,
-    //         },
-    //         body: JSON.stringify({'semester_id': this.state.semester_id})
-    //     }).then(response => response.json())
-    //         .then(response => {
-    //             // console.log(response);
-    //             this.setState({ listClass: response.map(subject => ({
-    //                 classId: subject.semantic_class_id,
-    //                 className: subject.className,
-    //                 semester_id: subject.semester_id,
-    //             }))})
-    //         })
-    //         .catch(error => console.log('Loi', error));
-    // }
-    // componentWillMount() {
-    //     this.setState({ listClass: this.props.listClass });
-    // }
-
     render() {
-        // console.log(this.state.listClass);
-        // console.log(this.props.match.params.id);
+        console.log(this.props);
         let listClass;
         switch (this.state.role) {
             case 'admin':
@@ -60,7 +33,7 @@ class ClassList extends Component {
                                     <div className="col-xs-12 text-right">{subject.className}</div>
                                 </div>
                             </div>
-                            <Link to={"/infoClass" + subject.classId} >
+                            <Link to={"/infoClass" + subject.classId.replace(/\s/g, '')} >
                                 <div className="panel-footer">
                                     <span className="pull-left">Xem chi tiết</span>
                                     <span className="pull-right"><i className="fa fa-arrow-circle-right"></i></span>
@@ -72,7 +45,7 @@ class ClassList extends Component {
                 );
                 break;
             case 'student':
-                listClass = this.state.listClass.map((subject, index) =>
+                listClass = this.props.listClass.map((subject, index) =>
                     <div key={index} className="col-lg-3 col-md-6">
                         <div className="panel panel-green">
                             <div className="panel-heading">
@@ -87,7 +60,7 @@ class ClassList extends Component {
                                     <div className="col-xs-12 text-right">{subject.className}</div>
                                 </div>
                             </div>
-                            <Link to="/reportClass">
+                            <Link to={"/reportClass" + subject.classId.replace(/\s/g, '')}>
                                 <div className="panel-footer">
                                     <span className="pull-left">Đánh giá môn học</span>
                                     <span className="pull-right"><i className="fa fa-arrow-circle-right"></i></span>
@@ -99,7 +72,7 @@ class ClassList extends Component {
                 );
                 break;
             case 'lecturer':
-                listClass = this.state.listClass.map((subject, index) =>
+                listClass = this.props.listClass.map((subject, index) =>
                     <div key={index} className="col-lg-3 col-md-6">
                         <div className="panel panel-green">
                             <div className="panel-heading">
@@ -114,7 +87,7 @@ class ClassList extends Component {
                                     <div className="col-xs-12 text-right">{subject.className}</div>
                                 </div>
                             </div>
-                            <Link to="/classInfo">
+                            <Link to={"/infoClass" + subject.classId.replace(/\s/g, '')}>
                                 <div className="panel-footer">
                                     <span className="pull-left">Xem chi tiết</span>
                                     <span className="pull-right"><i className="fa fa-arrow-circle-right"></i></span>
