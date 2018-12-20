@@ -46,9 +46,9 @@ const students = [{
 }]
 
 const lecturers = [{
-    lecturerName: 'Lê Đình Thanh',
+    lecturerName: 'abc',
     semester_id: 5,
-    mail: 'thanhld@vnu.edu.vn',
+    mail: 'abc@vnu.edu.vn',
     password:'123',
     phoneNumber:'0981999999',
     note:'Web dev teacher',
