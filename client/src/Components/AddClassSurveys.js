@@ -52,6 +52,7 @@ class AddClassSurveys extends Component {
                     'classRoom': list[i].classRoom,
                     'semester_id': 1,
                     'studentName': list[i].name,
+                    'lecturerName': this.state.teacherName,
                 })
             })
             response = response.json();
@@ -163,7 +164,7 @@ class AddClassSurveys extends Component {
                                 </div>
 
                                 <div className="modal-body">
-                                    <Reports />
+                                    <Reports role="admin"/>
                                 </div>
 
                                 <div className="modal-footer">

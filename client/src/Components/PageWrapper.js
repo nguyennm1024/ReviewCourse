@@ -40,9 +40,9 @@ class PageWrapper extends Component {
                         {this.state.list.map(route => 
                             <Route 
                                 key={route.classId}
-                                path={"/infoClass" + route.classId}
+                                path={"/infoClass" + route.classId.replace(/\s/g, '')}
                                 render={() => 
-                                    <ClassInfo class_id={route._id} />
+                                    <ClassInfo _id={route._id} role='admin' />
                                 }
                             />    
                         )}
@@ -73,9 +73,23 @@ class PageWrapper extends Component {
             case 'student': return (
                 <div id="page-wrapper" >
                     <Switch>
-                        <Route exact path="/" render={() => <Dashboard roleUser={'student'} />} />
+                        <Route exact path="/" render={() => <Dashboard roleUser={'student'} handleFromPage={this.handleData} />} />
 
-                        <Route path="/reportClass"/>
+                        <Route path="/dashboard" render={() => <Dashboard roleUser={'student'} handleFromPage={this.handleData} />} />
+
+                        {this.state.list.map(route => 
+                            <Route 
+                                key={route.classId}
+                                path={"/reportClass" + route.classId.replace(/\s/g, '')}
+                                render={() => 
+                                    <Reports
+                                        student_id={localStorage.getItem("id_user")} 
+                                        _id={route._id} 
+                                        role='student'
+                                    />
+                                }
+                            />    
+                        )}
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>
@@ -85,9 +99,19 @@ class PageWrapper extends Component {
             case 'lecturer': return (
                 <div id="page-wrapper" >
                     <Switch>
-                        <Route exact path="/" render={() => <Dashboard roleUser={'lecturer'} />} />
+                        <Route exact path="/" render={() => <Dashboard roleUser={'lecturer'} handleFromPage={this.handleData} />} />
 
-                        <Route path="/classInfo" render={() => <ClassInfo roleUser={'lecturer'} />} />
+                        <Route path="/dashboard" render={() => <Dashboard roleUser={'lecturer'} handleFromPage={this.handleData} />} />
+
+                        {this.state.list.map(route => 
+                            <Route 
+                                key={route.classId}
+                                path={"/infoClass" + route.classId.replace(/\s/g, '')}
+                                render={() => 
+                                    <ClassInfo _id={route._id} role='lecturer' />
+                                }
+                            />    
+                        )}
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>

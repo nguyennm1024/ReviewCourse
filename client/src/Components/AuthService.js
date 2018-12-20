@@ -18,6 +18,7 @@ export default class AuthService {
             body: JSON.stringify(data)
         }).then(res => {
             this.setToken(res.token);
+            this.setIdUser(res.idUser);
             return Promise.resolve(res)
         })
     }
@@ -39,6 +40,10 @@ export default class AuthService {
 
     setToken(idToken) {
         return localStorage.setItem('id_token', idToken);
+    }
+
+    setIdUser(idUser) {
+        return localStorage.setItem('id_user', idUser);
     }
 
     getToken() {

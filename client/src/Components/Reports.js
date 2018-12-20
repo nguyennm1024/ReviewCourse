@@ -18,45 +18,63 @@ class Reports extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            student_id: "",
-            class_id: "",
+            student_id: this.props.student_id,
+            class_id: this.props._id,
             subject_id: "",
             className: "",
-            // listSurveys: createListSurveys(),
-            giangDuong: null,
-            trangThietBi: null,
-            hoTroKipThoi: null,
-            mucTieuMonHoc: null,
-            thoiLuongMonHoc: null,
-            taiLieu: null,
-            trangBiKienThuc: null,
-            giangVienThucHienDayDu: null,
-            giangVienHuongDanBatDauMonHoc: null,
-            phuongPhapGiangDay: null,
-            giangVienTaoCoHoi: null,
-            giangVienGiupDocLap: null,
-            giangVienThucTien: null,
-            giangVienSuDungCongCu: null,
-            giangVienGiaoDucTuCachNguoiHoc: null,
-            hieuBai: null,
-            cachDanhGia: null,
-            noiDungDanhGia: null,
-            tacDungThongTinPhanHoi: null,
+            disabled: this.props.role === 'admin' ? true : false,
+            dataReport: {
+                giangDuong: null,
+                trangThietBi: null,
+                hoTroKipThoi: null,
+                mucTieuMonHoc: null,
+                thoiLuongMonHoc: null,
+                taiLieu: null,
+                trangBiKienThuc: null,
+                giangVienThucHienDayDu: null,
+                giangVienHuongDanBatDauMonHoc: null,
+                phuongPhapGiangDay: null,
+                giangVienTaoCoHoi: null,
+                giangVienGiupDocLap: null,
+                giangVienThucTien: null,
+                giangVienSuDungCongCu: null,
+                giangVienGiaoDucTuCachNguoiHoc: null,
+                hieuBai: null,
+                cachDanhGia: null,
+                noiDungDanhGia: null,
+                tacDungThongTinPhanHoi: null,
+            }
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    handleInputChange() {
-        // let target = event.target;
-        // let value = target.value;
-        // let name = target.name;
 
-        // this.setState({
-        //     [name]: value
-        // });
-        // console.log(this.state.slice('giangDuong'));
-        console.log(this.state);
+    async componentDidMount() {
+        const API_getStudentReport = `http://localhost:5000/api/${this.props.role}/getReport`;
+        let token = localStorage.getItem("id_token");
+        await fetch(API_getStudentReport, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify({
+                'student_id': this.props.student_id,
+                'class_id': this.props._id
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                delete response.class_id;
+                delete response.semester_id;
+                delete response.student_id;
+                delete response.subject_id;
+                delete response.__v;
+                delete response._id;
+                this.setState({ dataReport: response });
+            })
+            .catch(err => console.log("Loi" + err));
     }
 
     handleChange(event) {
@@ -70,7 +88,7 @@ class Reports extends Component {
     }
 
     render() {
-        let listSurveys = Object.getOwnPropertyNames(this.state).slice(4).map(survey =>
+        let listSurveys = Object.getOwnPropertyNames(this.state.dataReport).map(survey =>
             <tr key={survey}>
                 <td>{KeyValue[survey]}</td>
                 <td>
@@ -80,6 +98,7 @@ class Reports extends Component {
                         value={1}
                         onChange={this.handleChange}
                         checked={this.state[survey] === "1"}
+                        disabled={this.state.disabled}
                     />
                 </td>
                 <td>
@@ -89,6 +108,7 @@ class Reports extends Component {
                         value={2}
                         onChange={this.handleChange}
                         checked={this.state[survey] === "2"}
+                        disabled={this.state.disabled}
                     />
                 </td>
                 <td>
@@ -98,6 +118,7 @@ class Reports extends Component {
                         value={3}
                         onChange={this.handleChange}
                         checked={this.state[survey] === "3"}
+                        disabled={this.state.disabled}
                     />
                 </td>
                 <td>
@@ -107,6 +128,7 @@ class Reports extends Component {
                         value={4}
                         onChange={this.handleChange}
                         checked={this.state[survey] === "4"}
+                        disabled={this.state.disabled}
                     />
                 </td>
                 <td>
@@ -116,12 +138,11 @@ class Reports extends Component {
                         value={5}
                         onChange={this.handleChange}
                         checked={this.state[survey] === "5"}
+                        disabled={this.state.disabled}
                     />
                 </td>
             </tr>
         );
-        let show = this.props.show ? "in" : "";
-        let display = this.props.show ? "block" : "none";
         return (
             <div className="row">
                 <div className="col-lg-12">
@@ -148,46 +169,7 @@ class Reports extends Component {
                         </div>
                     </div>
                 </div>
-                <button onClick={this.handleInputChange}>xxx</button>
             </div>
-            // <div className={"modal fade " + show} role="dialog" style={{display: display }}>
-            //     <div className="modal-dialog">
-            //         <div className="modal-content">
-            //             <div className="modal-header text-center">
-            //                 <button type="button" className="close" data-dismiss="modal">&times;</button>
-            //                 <h4 className="modal-title">Toán rời rạc INT1003 1</h4>
-            //             </div>
-
-            //             <div className="modal-body">
-            //                 <GroupSurvey
-            //                     groupName="1.* Cơ sở vật chất"
-            //                     listGroup={listSurveys.slice(0, 2)}
-            //                 />
-
-            //                 <GroupSurvey
-            //                     groupName="2.* Môn học"
-            //                     listGroup={listSurveys.slice(2, 7)}
-            //                 />
-
-            //                 <GroupSurvey
-            //                     groupName="3.* Hoạt động giảng dạy của giảng viên"
-            //                     listGroup={listSurveys.slice(7)}
-            //                 />
-            //             </div>
-
-            //             <div className="modal-footer">
-            //                 <button 
-            //                     onClick={this.handleInputChange} 
-            //                     type="button" 
-            //                     className="btn btn-primary" 
-            //                     data-dismiss="modal"
-            //                 >
-            //                     Close
-            //                 </button>
-            //             </div>
-            //         </div>
-            //     </div>
-            // </div>
         );
     }
 }
