@@ -15,7 +15,7 @@ const login = (req, res) => {
             const token = user.generateJwt();
             decoded = jwt.verify(token,"JWT_SECRET")
             let idUser = user._id;
-            return res.status(201).json({ token, decoded, idUser });
+            return res.status(201).json({ token, decoded, idUser, user });
         }
         return res.status(400).json(message);
     })(req, res);
