@@ -9,6 +9,8 @@ const allClass = async (req,res) => {
     if(!_id) return res.status(400).json({message: "Student ID is required"});
     let studentClass = await Student.findOne({_id}).populate('classRegistered').exec();
     if(!studentClass) return res.status(400).json({message: "Student not found"});
+    let result = studentClass.classRegistered
+    // return res.status(200).json(result);
     return res.status(200).json(studentClass);
 }
 

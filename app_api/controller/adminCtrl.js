@@ -190,9 +190,10 @@ const studentInClass = async (req, res) => {
     let classSelected = await Class.findOne({_id}).exec();
     if(!classSelected) return res.status(400).json({message:'Class not found'})
 
-    let students = await Class.findOne({_id}).populate('listStudent').exec();
-    let lecturers = await Class.findOne({_id}).populate('lecturer_id').exec()
-    return res.status(200).json(students, lecturers);
+    let students = await Class.findOne({_id}).populate('listStudent').populate('lecturer_id').exec();
+    // return res.status(200).json(students);
+    //let lecturers = await Class.findOne({_id}).populate('lecturer_id').exec()
+    return res.status(200).json(students);
 }
 
 const getStudentReport = async (req,res) => {

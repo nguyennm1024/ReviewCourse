@@ -6,7 +6,7 @@ const Report = require('../model/report')
 
 const allClass = async (req, res) => {
     const {_id} = req.body;
-    let lecturerClass = await Lecturer.find({_id}).populate('teachingClass').exec();
+    let lecturerClass = await Lecturer.findOne({_id}).populate('teachingClass').exec();
     if(!lecturerClass) return res.status(400).json({message: 'Class of lecturer not found'});
     return res.status(200).json(lecturerClass);
 }
