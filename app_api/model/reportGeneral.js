@@ -154,7 +154,8 @@ const reportGeneralSchema = new Schema({
         STD2:{type:Number, default:0},
         M3:{type: Number, default:0},
         STD3:{type:Number, default: 0}
-    }
+    },
+    completed:{type: Number, default: 0}
 });
 
 module.exports = mongoose.model(name, reportGeneralSchema);

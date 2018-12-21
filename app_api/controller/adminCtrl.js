@@ -428,6 +428,11 @@ const createReport = async (req,res) => {
 
 const calculateM1 = async (generalReport, class_id) => {
     let myReports = await Report.find({class_id}).exec();
+    myReports.forEach(element => {
+        if(element.giangDuong !== 0) {
+            generalReport.completed++;
+        }
+    })
     let scoreAvg = 0;
     myReports.forEach(element => {
         scoreAvg = scoreAvg + element.giangDuong;
