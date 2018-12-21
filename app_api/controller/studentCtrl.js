@@ -11,7 +11,7 @@ const allClass = async (req,res) => {
     if(!studentClass) return res.status(400).json({message: "Student not found"});
     let result = studentClass.classRegistered
     // return res.status(200).json(result);
-    return res.status(200).json(result);
+    return res.status(200).json(studentClass);
 }
 
 const getReport = async (req,res) => {
