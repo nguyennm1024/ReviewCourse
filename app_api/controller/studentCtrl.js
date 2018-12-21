@@ -11,7 +11,7 @@ const allClass = async (req,res) => {
     if(!studentClass) return res.status(400).json({message: "Student not found"});
     let result = studentClass.classRegistered
     // return res.status(200).json(result);
-    return res.status(200).json({message: "success"});
+    return res.status(200).json(result);
 }
 
 const getReport = async (req,res) => {
@@ -21,7 +21,7 @@ const getReport = async (req,res) => {
     let studentReport = await Report.findOne({student_id, class_id});
     if(!studentReport) return res.status(400).json(new Report());
 
-    return res.status(200).json({message: "success"});
+    return res.status(200).json(studentReport);
 }
 
 const postReport = async (req,res) => {
