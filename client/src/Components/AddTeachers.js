@@ -62,7 +62,7 @@ class AddTeachers extends Component {
             <tr key={teacher.userName}>
                 <td>{index + 1}</td>
                 <td>{teacher.userName}</td>
-                <td>{teacher.password}</td>
+                {/* <td>{teacher.password}</td> */}
                 <td>{teacher.name}</td>
                 <td>{teacher.mail}</td>
             </tr>
@@ -74,11 +74,28 @@ class AddTeachers extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="panel panel-default">
-                            <div className="panel-heading">
-                                <input
-                                    type="file"
-                                    onChange={this.addFromExcel}
-                                />
+                            <div className="panel-heading clearfix">
+<div className="btn-group pull-left">
+                            <label className="btn btn-primary btn-file">
+                                    Thêm thủ công
+                                    <input
+                                        type="file"
+                                        onChange={this.addFromExcel}
+                                        style={{ display: "none", }}
+                                    />
+                                </label>
+                                </div>
+
+                                <div className="btn-group pull-right">
+                                <label className="btn btn-primary btn-file">
+                                    Thêm từ tệp Excel
+                                    <input
+                                        type="file"
+                                        onChange={this.addFromExcel}
+                                        style={{ display: "none", }}
+                                    />
+                                </label>
+                                </div>
                             </div>
 
                             <div className="panel-body">
@@ -112,7 +129,6 @@ const headerTable = (
     <tr>
         <th>STT</th>
         <th>Tên đăng nhập</th>
-        <th>Mật khẩu</th>
         <th>Họ và tên</th>
         <th>VNU email</th>
     </tr>

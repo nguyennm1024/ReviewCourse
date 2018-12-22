@@ -3,26 +3,48 @@ import { Link } from 'react-router-dom';
 import Reports from './Reports';
 import Modal from './Modal';
 
+const API_setReportToDefault = "http://localhost:5000/api/admin/setReportToDefault";
+
 class ClassInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: "",
+            className: this.props.className,
             semester_id: null,
+            teacherName: "",
             classId: "",
             listStudent: [],
             toggle: false,
             studentSelected: null,
         }
         this.toggle = this.toggle.bind(this);
+        this.setReportToDefault = this.setReportToDefault.bind(this);
     }
 
     toggle() {
         this.setState({ toggle: !this.state.toggle });
     }
 
+    async setReportToDefault() {
+        let token = localStorage.getItem('id_token');
+        await fetch(API_setReportToDefault, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify({
+                'student_id': this.state.studentSelected,
+                'class_id': this.props._id
+            })
+        })
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .catch(err => console.log("Loi" + err));
+    }
+
     componentDidMount() {
-        const API_classInfo = `http://localhost:5000/api/${this.props.role}/studentInClass`;
+        const API_classInfo = `http://localhost:5000/api/${localStorage.getItem('role')}/studentInClass`;
         let token = localStorage.getItem('id_token');
         fetch(API_classInfo, {
             method: 'POST',
@@ -34,11 +56,15 @@ class ClassInfo extends Component {
         })
             .then(response => response.json())
             .then(response => {
-                console.log(response);
                 this.setState({
-                    className: response.className,
-                    semester_id: response.semester_id,
+                    // className: response.className,
+                    semester_id: localStorage.getItem('role') === 'admin' 
+                        ? response.lecturer.semester_id
+                        : response.semester_id,
                     classId: response.semantic_class_id,
+                    teacherName: localStorage.getItem('role') === 'admin' 
+                        ? response.lecturer.lecturerName
+                        : response.lecturerName,
                     listStudent: response.listStudent.map(student => ({
                         MSSV: student.MSSV,
                         birth: student.birth.toLocaleString(),
@@ -47,14 +73,16 @@ class ClassInfo extends Component {
                         _id: student._id
                     }))
                 })
+                localStorage.setItem('teacherName', this.state.teacherName);
                 // console.log(this.state);
             })
             .catch(error => console.log('Loi', error));
     }
 
     render() {
+        console.log(this.state.toggle);
         let listStudents;
-        switch (this.props.role) {
+        switch (localStorage.getItem('role')) {
             case 'admin':
                 listStudents = this.state.listStudent.map((student, index) =>
                     <tr key={student.MSSV}>
@@ -105,7 +133,7 @@ class ClassInfo extends Component {
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 <table width="100%" className="table table-striped table-bordered table-hover">
-                                    <HeaderTable role={this.props.role} />
+                                    <HeaderTable />
                                     <tbody>
                                         {listStudents}
                                     </tbody>
@@ -113,7 +141,7 @@ class ClassInfo extends Component {
                             </div>
 
                             <div className="panel-footer">
-                                <Link to="/surveyResult">
+                                <Link to={"/surveyResult" + this.props.classId.replace(/\s/g, '')}>
                                     <button className="btn btn-secondary">Kết quả khảo sát</button>
                                 </Link>
                             </div>
@@ -121,21 +149,25 @@ class ClassInfo extends Component {
                     </div>
                 </div>
 
-                {this.state.toggle ? <Modal 
-                    changeToggle={this.toggle} 
-                    _id={this.props._id}
-                    student_id={this.state.studentSelected}
-                    role={this.props.role}
-                /> 
-                    : <div></div>
+                {this.state.toggle ? <Modal
+                    component={<Reports 
+                        _id={this.props._id}
+                        student_id={this.state.studentSelected}
+                        className={this.state.className}
+                    />}
+                    changeToggle={this.toggle}
+                    action={this.setReportToDefault}
+                    actionName={"Đặt mặc định"}
+                    title={this.state.className}
+                    /> : <div />
                 }
             </div>
         );
     }
 }
 
-const HeaderTable = (props) => {
-    switch (props.role) {
+const HeaderTable = () => {
+    switch (localStorage.getItem('role')) {
         case 'admin': return (
             <thead>
                 <tr>

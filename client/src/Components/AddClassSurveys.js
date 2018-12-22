@@ -5,14 +5,6 @@ import Reports from './Reports';
 
 const API_addClassSurvey = "http://localhost:5000/api/admin/createReport";
 
-const display = {
-    display: 'block'
-};
-
-const hide = {
-    display: 'none'
-};
-
 class AddClassSurveys extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +25,6 @@ class AddClassSurveys extends Component {
     async addClassSurvey() {
         let token = localStorage.getItem("id_token");
         let list = this.state.listStudent;
-        console.log(this.state);
         for (let i = 0; i < list.length; i++) {
             const response = await fetch(API_addClassSurvey, {
                 method: "POST",
@@ -42,7 +33,7 @@ class AddClassSurveys extends Component {
                     'Authorization': 'Bearer ' + token,
                 },
                 body: JSON.stringify({
-                    'lecturerMail': 'thanhld@vnu.edu.vn',
+                    'lecturerMail': this.state.teacherId + '@vnu.edu.vn',
                     'semantic_class_id': this.state.subject_id,
                     'subject_id': this.state.subject_id.split(" ")[0],
                     'className': this.state.name,
@@ -56,6 +47,7 @@ class AddClassSurveys extends Component {
                 })
             })
             response = response.json();
+            console.log(response);
         }
         // alert('huhu');
     }
@@ -73,7 +65,7 @@ class AddClassSurveys extends Component {
                 semester_id: worksheet['A5'].v,
                 name: worksheet['C10'].v,
                 teacherName: worksheet['C7'].v,
-                teacherId: worksheet['E7'].v,
+                teacherId: worksheet['F10'].v,
             });
             for (let row = 11; true; row++) {
                 if (worksheet[XLSX.utils.encode_cell({ c: 1, r: row })] === undefined) break;
@@ -101,18 +93,9 @@ class AddClassSurveys extends Component {
                 <td>{student.name}</td>
                 <td>{student.birth}</td>
                 <td>{student.classRoom}</td>
-                <td>
-                    {/* <Link to="/report"> */}
-                    <button className="btn btn-secondary" onClick={this.toggle}>
-                        Phiếu
-                    </button>
-                    {/* </Link> */}
-
-                </td>
             </tr>
         );
         return (
-            <div className={this.state.toggle ? "modal-open" : ""}>
                 <div>
                     <Header title="Lớp khảo sát" />
                     <div className="row">
@@ -155,29 +138,7 @@ class AddClassSurveys extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className={"modal fade " + (this.state.toggle ? "in" : "")} role='dialog' style={this.state.toggle ? display : hide}>
-                        <div className="modal-dialog modal-lg">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <button className="close" onClick={this.toggle}>&times;</button>
-                                    <h4 className="modal-title"></h4>
-                                </div>
-
-                                <div className="modal-body">
-                                    <Reports role="admin"/>
-                                </div>
-
-                                <div className="modal-footer">
-                                    <button className="btn btn-default" onClick={this.toggle}>Close</button>
-                                    <button className="btn btn-default" onClick={this.toggle}>Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {this.state.toggle ? <div className="modal-backdrop fade in" onClick={this.toggle} /> : <div />}
                 </div>
-
-            </div>
         );
     }
 }
@@ -197,7 +158,6 @@ const headerTable = (
             <th>Họ và tên</th>
             <th>Ngày sinh</th>
             <th>Lớp khóa học</th>
-            <th>Phiếu</th>
         </tr>
     </thead>
 );

@@ -71,11 +71,14 @@ class AddTeachers extends Component {
                     <div className="col-lg-12">
                         <div className="panel panel-default">
                             <div className="panel-heading">
-                                <input
-                                    type="file"
-                                    // value="Thêm từ Excel"
-                                    onChange={this.deleteFromExcel}
-                                />
+                                <label className="btn btn-primary btn-file">
+                                    Xóa từ tệp Excel
+                                    <input
+                                        type="file"
+                                        onChange={this.deleteFromExcel}
+                                        style={{ display: "none", }}
+                                    />
+                                </label>
                             </div>
 
                             <div className="panel-body">

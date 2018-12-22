@@ -9,15 +9,18 @@ class Sidebar extends Component {
 
     logout() {
         localStorage.removeItem('id_token');
+        localStorage.removeItem('id_user');
+        localStorage.removeItem('role');
+        localStorage.removeItem('userName');
         this.props.history.push('/login');
     }
 
     render() {
-        switch (this.props.role) {
+        switch (localStorage.getItem('role')) {
             case 'admin': return (
-                <div className="navbar-default sidebar">
+                <div className="navbar-default sidebar" style={{position: 'fixed'}}>
                     <div className="sidebar-nav navbar-collapse">
-                        <Avatar name="Nguyễn Tùng Dương" />
+                        <Avatar name='Admin' />
                         <ul className="nav" id="side-menu" hidden={false}>
                             <li>
                                 <Link to="/dashboard"><i className="fa fa-dashboard"></i> Khảo sát</Link>
@@ -44,11 +47,12 @@ class Sidebar extends Component {
                 </div>
             );
             case 'student': return (
-                <div className="navbar-default sidebar">
+                <div className="navbar-default sidebar" style={{position: 'fixed'}}>
                     <div className="sidebar-nav navbar-collapse">
-                        <Avatar name="Nguyễn Tùng Dương" />
+                        <Avatar name={localStorage.getItem('userName')} />
                         <ul className="nav" id="side-menu" hidden={false}>
                             <li>
+
                                 <button
                                     className="btn btn-link logout-buttonr"
                                     onClick={this.logout}
@@ -61,9 +65,9 @@ class Sidebar extends Component {
                 </div>
             );
             case 'lecturer': return (
-                <div className="navbar-default sidebar">
+                <div className="navbar-default sidebar" style={{position: 'fixed'}}>
                     <div className="sidebar-nav navbar-collapse">
-                        <Avatar name="Nguyễn Tùng Dương" />
+                        <Avatar name={localStorage.getItem('userName')} />
                         <ul className="nav" id="side-menu" hidden={false}>
                             <li>
                                 <button

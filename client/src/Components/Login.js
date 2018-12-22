@@ -22,11 +22,9 @@ class Login extends Component {
     }
 
     handleSubmit(e) {
-        console.log(this.props);
         e.preventDefault();
         this.Auth.login(this.state.user, this.state.password)
             .then(res => {
-                console.log(res);
                 this.props.history.replace('/')
             })
             .catch(err => console.log("Loi" + err));

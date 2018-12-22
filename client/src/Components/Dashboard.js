@@ -13,18 +13,15 @@ class Dashboard extends Component {
         this.state = {
             semester_id: 1,
             listClass: [],
-            role: decode(localStorage.getItem('id_token')).role,
             idUser: localStorage.getItem('id_user'),
         };
     }
 
     componentDidMount() {
-        const data = this.state.role === 'admin' 
+        const data = localStorage.getItem('role') === 'admin' 
                 ? {'semester_id': this.state.semester_id} 
                 : {'_id': this.state.idUser};
-        const API_allClass = `http://localhost:5000/api/${this.state.role}/allClass`;
-        // console.log(localStorage.getItem('id_user'));
-        console.log(API_allClass);
+        const API_allClass = `http://localhost:5000/api/${localStorage.getItem('role')}/allClass`;
         let token = localStorage.getItem('id_token');
         fetch(API_allClass, {
             method: 'POST',
@@ -36,10 +33,8 @@ class Dashboard extends Component {
         })
             .then(response => response.json())
             .then(response => {
-                console.log(response);
-                console.log(response.teachingClass);
                 let list;
-                switch (this.state.role) {
+                switch (localStorage.getItem('role')) {
                     case 'lecturer': 
                         list = response.teachingClass;
                         break;
@@ -48,7 +43,6 @@ class Dashboard extends Component {
                         break;
                     default: list = response;
                 }
-                console.log(list);
                 this.setState({
                     listClass: list.map(subject => ({
                         classId: subject.semantic_class_id,
@@ -57,14 +51,13 @@ class Dashboard extends Component {
                         _id: subject._id,
                     }))
                 });
-                console.log(this.state.listClass);
                 this.props.handleFromPage(this.state.listClass);
             })
             .catch(error => console.log('Loi', error));
     }
 
     render() {
-        switch (this.state.role) {
+        switch (localStorage.getItem('role')) {
             case 'admin': return (
                 <div>
                     <div className="row">

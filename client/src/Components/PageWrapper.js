@@ -27,24 +27,26 @@ class PageWrapper extends Component {
     }
 
     render() {
-        switch (this.props.role) {
+        switch (localStorage.getItem('role')) {
             case 'admin': return (
                 <div id="page-wrapper">
                     <Switch>
-                        <Route exact path="/" render={() => <Dashboard roleUser={'admin'} handleFromPage={this.handleData} />} />
+                        <Route exact path="/" render={() => <Dashboard roleUser='admin' handleFromPage={this.handleData} />} />
 
-                        <Route path="/dashboard" render={() => <Dashboard roleUser={'admin'} handleFromPage={this.handleData} />} />
+                        <Route path="/dashboard" render={() => <Dashboard roleUser='admin' handleFromPage={this.handleData} />} />
 
-                        {/* <Route path="/classInfo" render={() => <ClassInfo roleUser={'admin'} />} /> */}
-
-                        {this.state.list.map(route => 
-                            <Route 
-                                key={route.classId}
+                        {this.state.list.map(route =>
+                            <Route
+                                key={route.classId.toLowerCase()}
                                 path={"/infoClass" + route.classId.replace(/\s/g, '')}
-                                render={() => 
-                                    <ClassInfo _id={route._id} role='admin' />
+                                render={() =>
+                                    <ClassInfo
+                                        _id={route._id}
+                                        className={route.className}
+                                        classId={route.classId}
+                                    />
                                 }
-                            />    
+                            />
                         )}
 
                         <Route path="/addClassSurvey" component={AddClassSurveys} />
@@ -61,9 +63,19 @@ class PageWrapper extends Component {
 
                         <Route path="/deleteTeachers" component={DeleteTeachers} />
 
-                        <Route path="/surveyResult" render={() => <SurveyResult roleUser={'admin'} />} />
-
-                        {/* <Route path="/report" render={() => <Reports roleUser={'admin'} />} /> */}
+                        {this.state.list.map(result =>
+                            <Route
+                                key={result._id}
+                                path={"/surveyResult" + result.classId.replace(/\s/g, '')}
+                                render={() =>
+                                    <SurveyResult
+                                        class_id={result._id}
+                                        subject_id={result.classId.split(' ')[0]}
+                                        semester_id={result.semester_id}
+                                    />
+                                }
+                            />
+                        )}
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>
@@ -73,22 +85,22 @@ class PageWrapper extends Component {
             case 'student': return (
                 <div id="page-wrapper" >
                     <Switch>
-                        <Route exact path="/" render={() => <Dashboard roleUser={'student'} handleFromPage={this.handleData} />} />
+                        <Route exact path="/" render={() => <Dashboard roleUser='student' handleFromPage={this.handleData} />} />
 
-                        <Route path="/dashboard" render={() => <Dashboard roleUser={'student'} handleFromPage={this.handleData} />} />
+                        <Route path="/dashboard" render={() => <Dashboard roleUser='student' handleFromPage={this.handleData} />} />
 
-                        {this.state.list.map(route => 
-                            <Route 
+                        {this.state.list.map(route =>
+                            <Route
                                 key={route.classId}
                                 path={"/reportClass" + route.classId.replace(/\s/g, '')}
-                                render={() => 
+                                render={() =>
                                     <Reports
-                                        student_id={localStorage.getItem("id_user")} 
-                                        _id={route._id} 
-                                        role='student'
+                                        student_id={localStorage.getItem("id_user")}
+                                        _id={route._id}
+                                        className={route.className}
                                     />
                                 }
-                            />    
+                            />
                         )}
 
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
@@ -99,20 +111,37 @@ class PageWrapper extends Component {
             case 'lecturer': return (
                 <div id="page-wrapper" >
                     <Switch>
-                        <Route exact path="/" render={() => <Dashboard roleUser={'lecturer'} handleFromPage={this.handleData} />} />
+                        <Route exact path="/" render={() => <Dashboard roleUser='lecturer' handleFromPage={this.handleData} />} />
 
-                        <Route path="/dashboard" render={() => <Dashboard roleUser={'lecturer'} handleFromPage={this.handleData} />} />
+                        <Route path="/dashboard" render={() => <Dashboard roleUser='lecturer' handleFromPage={this.handleData} />} />
 
-                        {this.state.list.map(route => 
-                            <Route 
+                        {this.state.list.map(route =>
+                            <Route
                                 key={route.classId}
                                 path={"/infoClass" + route.classId.replace(/\s/g, '')}
-                                render={() => 
-                                    <ClassInfo _id={route._id} role='lecturer' />
+                                render={() =>
+                                    <ClassInfo
+                                        _id={route._id}
+                                        className={route.className}
+                                        classId={route.classId}
+                                    />
                                 }
-                            />    
+                            />
                         )}
 
+                        {this.state.list.map(result =>
+                            <Route
+                                key={result._id}
+                                path={"/surveyResult" + result.classId.replace(/\s/g, '')}
+                                render={() =>
+                                    <SurveyResult
+                                        class_id={result._id}
+                                        subject_id={result.classId.split(' ')[0]}
+                                        semester_id={result.semester_id}
+                                    />
+                                }
+                            />
+                        )}  
                         <Route component={() => <h1>Không tìm thấy trang</h1>} />
                     </Switch>
                 </div>
