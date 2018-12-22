@@ -732,12 +732,19 @@ const calculateSTD3 = async (generalReport, lecturerName, semester_id) => {
 const generalReport = async (req, res) => {
     const {class_id, subject_id, semester_id, lecturerName} = req.body;
     let genReport = new GeneralReport();
+    let myReports = await Report.find({class_id}).exec();
+    let completed = 0;
+    await myReports.forEach(element => {
+        if(element.giangDuong !== 0) {
+            completed++;
+        }
+    })
     await calculateM1(genReport, class_id);
     await calculateSTD1(genReport, class_id);
     await calculateM2(genReport, subject_id, semester_id);
     await calculateSTD2(genReport, subject_id, semester_id);
     await calculateM3(genReport, lecturerName, semester_id);
     await calculateSTD3(genReport, lecturerName, semester_id);
-    return res.status(200).json(genReport);
+    return res.status(200).json({"genReport": genReport, "completed": completed});
 }
 module.exports = {allClass, studentInClass, generalReport};
