@@ -1137,19 +1137,35 @@ const generalReport = async (req, res) => {
     const {class_id, subject_id, semester_id, lecturerName} = req.body;
     let genReport = new GeneralReport();
     let myReports = await Report.find({class_id}).exec();
-    let completed = 0;
+    let completed1 = 0;
     await myReports.forEach(element => {
         if(element.giangDuong !== 0) {
-            completed++;
+            completed1++;
         }
     })
-    await calculateM1(genReport, class_id, completed);
-    await calculateSTD1(genReport, class_id, completed);
-    await calculateM2(genReport, subject_id, semester_id, completed);
-    await calculateSTD2(genReport, subject_id, semester_id, completed);
-    await calculateM3(genReport, lecturerName, semester_id, completed);
-    await calculateSTD3(genReport, lecturerName, semester_id, completed);
-    return res.status(200).json({"genReport": genReport, "completed": completed});
+
+    let myReports = await Report.find({subject_id, semester_id}).exec();
+    let completed2 = 0;
+    await myReports.forEach(element => {
+        if(element.giangDuong !== 0) {
+            completed2++;
+        }
+    })
+
+    let myReports = await Report.find({lecturerName, semester_id}).exec();
+    let completed3 = 0;
+    await myReports.forEach(element => {
+        if(element.giangDuong !== 0) {
+            completed3++;
+        }
+    })
+    await calculateM1(genReport, class_id, completed1);
+    await calculateSTD1(genReport, class_id, completed1);
+    await calculateM2(genReport, subject_id, semester_id, completed2);
+    await calculateSTD2(genReport, subject_id, semester_id, completed2);
+    await calculateM3(genReport, lecturerName, semester_id, completed3);
+    await calculateSTD3(genReport, lecturerName, semester_id, completed3);
+    return res.status(200).json({"genReport": genReport, "completed": completed1});
 }
 
 const changePassword = async (req,res) => {
