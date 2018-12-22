@@ -1144,7 +1144,7 @@ const generalReport = async (req, res) => {
         }
     })
 
-    let myReports = await Report.find({subject_id, semester_id}).exec();
+    myReports = await Report.find({subject_id, semester_id}).exec();
     let completed2 = 0;
     await myReports.forEach(element => {
         if(element.giangDuong !== 0) {
@@ -1152,7 +1152,7 @@ const generalReport = async (req, res) => {
         }
     })
 
-    let myReports = await Report.find({lecturerName, semester_id}).exec();
+    myReports = await Report.find({lecturerName, semester_id}).exec();
     let completed3 = 0;
     await myReports.forEach(element => {
         if(element.giangDuong !== 0) {
