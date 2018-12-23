@@ -3,20 +3,19 @@ import { Link, Route } from 'react-router-dom';
 import decode from 'jwt-decode';
 import ClassInfo from './ClassInfo';
 
+
 class ClassList extends Component {
     constructor(props) {
         super(props);
         this.state = {
             listClass: [],
-            role: decode(localStorage.getItem('id_token')).role,
             semester_id: 1,
         }
     }
 
     render() {
-        console.log(this.props);
         let listClass;
-        switch (this.state.role) {
+        switch (localStorage.getItem('role')) {
             case 'admin':
                 listClass = this.props.listClass.map((subject, index) =>
                     <div key={index} className="col-lg-3 col-md-6">

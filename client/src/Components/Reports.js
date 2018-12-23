@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { KeyValue } from './KeyValueSurvey';
 
+const API_postReport = "http://localhost:5000/api/student/postReport";
+
 const headerTable = (
     <thead>
         <tr>
@@ -22,7 +24,7 @@ class Reports extends Component {
             class_id: this.props._id,
             subject_id: "",
             className: "",
-            disabled: this.props.role === 'admin' ? true : false,
+            disabled: localStorage.getItem('role') === 'admin' ? true : false,
             dataReport: {
                 giangDuong: null,
                 trangThietBi: null,
@@ -46,11 +48,12 @@ class Reports extends Component {
             }
         };
         this.handleChange = this.handleChange.bind(this);
+        this.postReport = this.postReport.bind(this);
     }
 
 
-    async componentDidMount() {
-        const API_getStudentReport = `http://localhost:5000/api/${this.props.role}/getReport`;
+    async componentWillMount() {
+        const API_getStudentReport = `http://localhost:5000/api/${localStorage.getItem('role')}/getReport`;
         let token = localStorage.getItem("id_token");
         await fetch(API_getStudentReport, {
             method: "POST",
@@ -72,6 +75,7 @@ class Reports extends Component {
                 delete response.subject_id;
                 delete response.__v;
                 delete response._id;
+                delete response.lecturerName;
                 this.setState({ dataReport: response });
             })
             .catch(err => console.log("Loi" + err));
@@ -81,10 +85,36 @@ class Reports extends Component {
         let target = event.target;
         let value = target.value;
         let name = target.name;
-
+        let data = Object.assign({}, this.state.dataReport);
+        data[name] = parseInt(value);
+        console.log(data);
         this.setState({
-            [name]: value
+            dataReport: data
         });
+    }
+
+    async postReport() {
+        // console.log(this.props);
+        console.log(this.state.dataReport);
+        let token = localStorage.getItem('id_token');
+        await fetch(API_postReport, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify({
+                'student_id': this.props.student_id,
+                'class_id': this.props._id,
+                // 'subject_id': 
+                ...this.state.dataReport
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+            })
+            .catch(err => console.log("Loi:" + err));
     }
 
     render() {
@@ -97,7 +127,7 @@ class Reports extends Component {
                         name={survey}
                         value={1}
                         onChange={this.handleChange}
-                        checked={this.state[survey] === "1"}
+                        checked={this.state.dataReport[survey] === 1}
                         disabled={this.state.disabled}
                     />
                 </td>
@@ -107,7 +137,7 @@ class Reports extends Component {
                         name={survey}
                         value={2}
                         onChange={this.handleChange}
-                        checked={this.state[survey] === "2"}
+                        checked={this.state.dataReport[survey] === 2}
                         disabled={this.state.disabled}
                     />
                 </td>
@@ -117,7 +147,7 @@ class Reports extends Component {
                         name={survey}
                         value={3}
                         onChange={this.handleChange}
-                        checked={this.state[survey] === "3"}
+                        checked={this.state.dataReport[survey] === 3}
                         disabled={this.state.disabled}
                     />
                 </td>
@@ -127,7 +157,7 @@ class Reports extends Component {
                         name={survey}
                         value={4}
                         onChange={this.handleChange}
-                        checked={this.state[survey] === "4"}
+                        checked={this.state.dataReport[survey] === 4}
                         disabled={this.state.disabled}
                     />
                 </td>
@@ -137,7 +167,7 @@ class Reports extends Component {
                         name={survey}
                         value={5}
                         onChange={this.handleChange}
-                        checked={this.state[survey] === "5"}
+                        checked={this.state.dataReport[survey] === 5}
                         disabled={this.state.disabled}
                     />
                 </td>
@@ -147,10 +177,6 @@ class Reports extends Component {
             <div className="row">
                 <div className="col-lg-12">
                     <div className="panel panel-default">
-                        <div className="panel-heading text-center">
-                            <h4>Toán rời rạc INT1003 1</h4>
-                        </div>
-
                         <div className="panel-body">
                             <GroupSurvey
                                 groupName="1.* Cơ sở vật chất"
@@ -167,6 +193,19 @@ class Reports extends Component {
                                 listGroup={listSurveys.slice(7)}
                             />
                         </div>
+
+                        {
+                            localStorage.getItem('role') === 'student'
+                            ? <div className="panel-footer">
+                                <button 
+                                    className="btn btn-default"
+                                    onClick={this.postReport}
+                                >
+                                    Gửi đánh giá
+                                </button>
+                            </div>
+                            : <div />
+                        }
                     </div>
                 </div>
             </div>

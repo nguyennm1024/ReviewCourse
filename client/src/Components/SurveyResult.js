@@ -2,54 +2,90 @@ import React, { Component } from 'react';
 import { KeyValue } from './KeyValueSurvey';
 
 const result = {
-    M1: null,
-    STD1: null,
-    M2: null,
-    STD2: null,
-    M3: null,
-    STD3: null,
+    M1: 0,
+    STD1: 0,
+    M2: 0,
+    STD2: 0,
+    M3: 0,
+    STD3: 0,
 }
 
 class SurveyResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            giangDuong: result,
-            trangThietBi: result,
-            hoTroKipThoi: result,
-            mucTieuMonHoc: result,
-            thoiLuongMonHoc: result,
-            taiLieu: result,
-            trangBiKienThuc: result,
-            giangVienThucHienDayDu: result,
-            giangVienHuongDanBatDauMonHoc: result,
-            phuongPhapGiangDay: result,
-            giangVienTaoCoHoi: result,
-            giangVienGiupDocLap: result,
-            giangVienThucTien: result,
-            giangVienSuDungCongCu: result,
-            giangVienGiaoDucTuCachNguoiHoc: result,
-            hieuBai: result,
-            cachDanhGia: result,
-            noiDungDanhGia: result,
-            tacDungThongTinPhanHoi: result,
+                completed: 0,
+                genReport: {
+                    giangDuong: result,
+                    trangThietBi: result,
+                    hoTroKipThoi: result,
+                    mucTieuMonHoc: result,
+                    thoiLuongMonHoc: result,
+                    taiLieu: result,
+                    trangBiKienThuc: result,
+                    giangVienThucHienDayDu: result,
+                    giangVienHuongDanBatDauMonHoc: result,
+                    phuongPhapGiangDay: result,
+                    giangVienTaoCoHoi: result,
+                    giangVienGiupDocLap: result,
+                    giangVienThucTien: result,
+                    giangVienSuDungCongCu: result,
+                    giangVienGiaoDucTuCachNguoiHoc: result,
+                    hieuBai: result,
+                    cachDanhGia: result,
+                    noiDungDanhGia: result,
+                    tacDungThongTinPhanHoi: result,
+            }
         };
     }
 
+    async componentDidMount() {
+        const API_surveyResult = `http://localhost:5000/api/${localStorage.getItem('role')}/generalReport`;
+        console.log(JSON.stringify({
+            'class_id': this.props.class_id,
+            'subject_id': this.props.subject_id,
+            'semester_id': this.props.semester_id,
+            'lecturerName': localStorage.getItem('role') === 'admin'
+                ? localStorage.getItem('teacherName')
+                : localStorage.getItem('userName')
+        }));
+        let token = localStorage.getItem('id_token');
+        await fetch(API_surveyResult, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify({
+                'class_id': this.props.class_id,
+                'subject_id': this.props.subject_id,
+                'semester_id': this.props.semester_id,
+                'lecturerName': localStorage.getItem('role') === 'admin'
+                    ? localStorage.getItem('teacherName')
+                    : localStorage.getItem('userName')
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                delete response.genReport._id;
+                this.setState(response);
+                console.log(response);
+            })
+            .catch(err => console.log("Loi:" + err));
+    }
     render() {
-        let listSurveys = Object.getOwnPropertyNames(this.state).map((survey, index) => 
+        let listSurveys = Object.getOwnPropertyNames(this.state.genReport).map((survey, index) => 
             <tr key={survey}>
                 <td>{index + 1}</td>
                 <td>{KeyValue[survey]}</td>
-                <td>{survey.M1}</td>
-                <td>{survey.STD1}</td>
-                <td>{survey.M2}</td>
-                <td>{survey.STD2}</td>
-                <td>{survey.M3}</td>
-                <td>{survey.STD3}</td>
+                <td>{this.state.genReport[survey].M1.toFixed(2)}</td>
+                <td>{this.state.genReport[survey].STD1.toFixed(2)}</td>
+                <td>{this.state.genReport[survey].M2.toFixed(2)}</td>
+                <td>{this.state.genReport[survey].STD2.toFixed(2)}</td>
+                <td>{this.state.genReport[survey].M3.toFixed(2)}</td>
+                <td>{this.state.genReport[survey].STD3.toFixed(2)}</td>
             </tr>
         );
-        // console.log(listSurveys);
         return (
             <div className="row">
                 <div className="col-lg-12">

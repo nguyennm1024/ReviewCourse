@@ -17,8 +17,15 @@ export default class AuthService {
             method: 'POST',
             body: JSON.stringify(data)
         }).then(res => {
+            let role = decode(res.token).role;
             this.setToken(res.token);
             this.setIdUser(res.idUser);
+            this.setRole(role);
+            this.setUserName(
+                role === 'lecturer' 
+                ? res.user.lecturerName 
+                : res.user.studentName
+            );
             return Promise.resolve(res)
         })
     }
@@ -44,6 +51,14 @@ export default class AuthService {
 
     setIdUser(idUser) {
         return localStorage.setItem('id_user', idUser);
+    }
+
+    setUserName(userName) {
+        return localStorage.setItem('userName', userName);
+    }
+
+    setRole(role) {
+        return localStorage.setItem('role', role);
     }
 
     getToken() {

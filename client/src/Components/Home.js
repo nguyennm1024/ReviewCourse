@@ -14,8 +14,8 @@ class Home extends Component {
   render() {
     return (
       <div id="wrapper">
-        <Sidebar role={this.Auth.getProfile().role}/>
-        <PageWrapper role={this.Auth.getProfile().role}/>
+        <Sidebar />
+        <PageWrapper />
       </div>
     );
   }
