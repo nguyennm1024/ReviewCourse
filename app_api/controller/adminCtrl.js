@@ -1300,6 +1300,39 @@ const generalReport = async (req, res) => {
     return res.status(200).json({"genReport": genReport, "completed": completed});
 }
 
+const removeElemetFromList = (list, element) => {
+    let index = list.indexOf(element);
+    if (index > -1) {
+       list.splice(index, 1);
+    }
+}
+const deleteSurvey = async (req, res) => {
+    const {class_id} = req.body;
+    let query = await Class.findOne({'_id': class_id});
+    if(query) {
+        let students_id = query.listStudent;
+        console.log(students_id)
+        let lecturers_id = query.lecturer_id;
+        let lecturers = await Lecturer.findOne({'_id': lecturers_id});
+        if(lecturers) {
+            await removeElemetFromList(lecturers.teachingClass, class_id);
+            await lecturers.save();
+        }
+        students_id.forEach(async (element) => {
+            let student = await Student.findOne({'_id': element});
+            if(student) {
+                await removeElemetFromList(student.classRegistered, class_id);
+                await student.save();
+            }
+        })
+        await Class.findOneAndRemove({'_id':class_id});
+        let reports = await Report.find({class_id})
+        reports.forEach(async (element) => {
+            await Report.findOneAndRemove({'class_id': element.class_id});
+        })
+    }
+    return res.status(201).json({message:"success"})
+}
 const changePassword = async (req,res) => {
     const {mail,password} = req.body;
     let user = await Student.find({mail});
@@ -1336,4 +1369,5 @@ module.exports = {updateInfo,
     generalReport,
     updateInfoStudent,
     updateInfoLecturer,
-    changePassword};
+    changePassword,
+    deleteSurvey};
