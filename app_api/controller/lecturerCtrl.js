@@ -25,6 +25,12 @@ const studentInClass = async (req, res) => {
 const calculateM1 = async (generalReport, class_id) => {
     let myReports = await Report.find({class_id}).exec();
     let scoreAvg = 0;
+    let completed = 0;
+    myReports.forEach(element => {
+        if(element.giangDuong !== 0) {
+            completed++;
+        }
+    })
     myReports.forEach(element => {
         scoreAvg = scoreAvg + element.giangDuong;
     });
@@ -305,6 +311,7 @@ const calculateSTD1 = async (generalReport, class_id) => {
 const calculateM2 = async (generalReport, subject_id, semester_id) => {
     let myReports = await Report.find({subject_id, semester_id}).exec();
     let scoreAvg = 0;
+    let completed = 0;
     myReports.forEach(element => {
         if(element.giangDuong !== 0) {
             completed++;
@@ -428,6 +435,7 @@ const calculateM2 = async (generalReport, subject_id, semester_id) => {
 const calculateSTD2 = async (generalReport, subject_id, semester_id) => {
     let myReports = await Report.find({subject_id, semester_id}).exec();
     let std2 = 0;
+    let completed = 0;
     myReports.forEach(element => {
         if(element.giangDuong !== 0) {
             completed++;
@@ -589,6 +597,7 @@ const calculateSTD2 = async (generalReport, subject_id, semester_id) => {
 const calculateM3 = async (generalReport, lecturerName, semester_id) => {
     let myReports = await Report.find({lecturerName, semester_id}).exec();
     let scoreAvg = 0;
+    let completed = 0;
     myReports.forEach(element => {
         if(element.giangDuong !== 0) {
             completed++;
@@ -709,9 +718,10 @@ const calculateM3 = async (generalReport, lecturerName, semester_id) => {
 
 }
 
-const calculateSTD3 = async (generalReport, class_id) => {
-    let myReports = await Report.find({class_id}).exec();
+const calculateSTD3 = async (generalReport, lecturerName, semester_id) => {
+    let myReports = await Report.find({lecturerName, semester_id}).exec();
     let std3 = 0;
+    let completed = 0;
     myReports.forEach(element => {
         if(element.giangDuong !== 0) {
             completed++;
