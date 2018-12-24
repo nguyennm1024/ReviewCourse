@@ -14,7 +14,7 @@ const extend = (Schema, obj) => (
 const lecturerSchema = extend(PersonSchema,{
     lecturerName: {type: String},
     birthday: {type: Date},
-    phoneNumber: {type: String, require},
+    phoneNumber: {type: String},
     vnumail: {type: String},
     note :{type: String, default:''},
     semester_id:{type: Number},

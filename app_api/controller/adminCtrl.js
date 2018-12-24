@@ -99,7 +99,6 @@ const updateInfoStudent = (req, res) => {
     const {mail} = req.body;
     const {studentName, phoneNumber, password, MSSV, birth, classRoom, semester_id, classRegistered} = req.body;
     if(!studentName) return res.status(400).json({message: "Name is required"});
-    if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
 
     Student.findOne({mail}, (err, student) =>{
         if(err) return res.status(400).json({err});
@@ -127,7 +126,6 @@ const updateInfoLecturer = (req, res) => {
     const {lecturerName, birthday, phoneNumber, note} = req.body;
     if(!mail) return res.status(400).json({message: "Mail is required"});    
     if(!lecturerName) return res.status(400).json({message: "Name is required"});
-    if(!phoneNumber) res.status(400).json({message: "Phone number is required"});
 
     Lecturer.findOne({mail}, (err, lecturer) =>{
         if(err) return res.status(400).json({err});
@@ -1154,15 +1152,23 @@ const generalReport = async (req, res) => {
 
 const changePassword = async (req,res) => {
     const {mail,password} = req.body;
-    students = await Student.find({mail});
-    students.forEach(element => {
+    let user = await Student.find({mail});
+    if(!user) {
+        user = await Lecturer.find({mail});
+    }
+    let count =0;
+    user.forEach(element => {
         element._hashAlready = false;
         element.password = password;
+        element.save(err => {
+            if(!err)
+                count++;
+        })
     })
-    await students.save(err => {
-        if(!err)
-            return res.status(200).json("success");
-    })
+    if(count !== user.length) {
+        return res.status(501).json({message: "Change password not success"})
+    }
+    return res.status(201).json({message: "success"})
 }
 module.exports = {updateInfo,
     allStudent,
