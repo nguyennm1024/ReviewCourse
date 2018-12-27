@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
-import decode from 'jwt-decode';
-import ClassInfo from './ClassInfo';
+import { Link } from 'react-router-dom';
 
 
 class ClassList extends Component {
@@ -19,26 +17,36 @@ class ClassList extends Component {
             case 'admin':
                 listClass = this.props.listClass.map((subject, index) =>
                     <div key={index} className="col-lg-3 col-md-6">
-                        <div className="panel panel-green">
+                        <div className="panel panel-primary">
                             <div className="panel-heading">
                                 <div className="row">
                                     <div className="col-xs-3">
-                                        <i className="fa fa-tasks fa-5x"></i>
+                                        <i className="fa fa-book fa-4x"></i>
                                     </div>
                                     <div className="col-xs-9 text-right">
-                                        <div className="huge">{subject.classId}</div>
-                                        <div>Năm học: {subject.semester_id}</div>
+                                        <div><h3>{subject.classId}</h3></div>
+                                        <div>Năm học: {this.state.semester_id + 2016} - {this.state.semester_id + 2017}</div>
                                     </div>
                                     <div className="col-xs-12 text-right">{subject.className}</div>
                                 </div>
                             </div>
-                            <Link to={"/infoClass" + subject.classId.replace(/\s/g, '')} >
-                                <div className="panel-footer">
-                                    <span className="pull-left">Xem chi tiết</span>
-                                    <span className="pull-right"><i className="fa fa-arrow-circle-right"></i></span>
-                                    <div className="clearfix"></div>
-                                </div>
-                            </Link>
+                           
+                            <div className="panel-footer" style={{paddingRight: "0px", paddingLeft: "0px"}}>
+                                <span 
+                                    className="col-xs-1"
+                                    onClick={() => {
+                                        this.props.sendIdClass(subject._id);
+                                        this.props.changeToggle();
+                                    }}
+                                    style={{cursor: "pointer"}}
+                                >
+                                    <i className="fa fa-trash"></i>
+                                </span>
+                                <Link to={"/infoClass" + subject.classId.replace(/\s/g, '')} >
+                                    <span className="col-xs-10 text-right" style={{paddingRight: "0px"}}>Xem chi tiết <i className="fa fa-eye"></i></span>
+                                </Link>
+                                <div className="clearfix"></div>
+                            </div>
                         </div>
                     </div>
                 );
@@ -46,23 +54,22 @@ class ClassList extends Component {
             case 'student':
                 listClass = this.props.listClass.map((subject, index) =>
                     <div key={index} className="col-lg-3 col-md-6">
-                        <div className="panel panel-green">
+                        <div className="panel panel-primary">
                             <div className="panel-heading">
                                 <div className="row">
                                     <div className="col-xs-3">
                                         <i className="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div className="col-xs-9 text-right">
-                                        <div className="huge">{subject.classId}</div>
-                                        <div>Năm học: {subject.semester_id}</div>
+                                        <div><h3>{subject.classId}</h3></div>
+                                        <div>Năm học: 2018</div>
                                     </div>
                                     <div className="col-xs-12 text-right">{subject.className}</div>
                                 </div>
                             </div>
                             <Link to={"/reportClass" + subject.classId.replace(/\s/g, '')}>
                                 <div className="panel-footer">
-                                    <span className="pull-left">Đánh giá môn học</span>
-                                    <span className="pull-right"><i className="fa fa-arrow-circle-right"></i></span>
+                                    <span className="pull-right">Đánh giá môn học <i className="fa fa-arrow-circle-right"></i></span>
                                     <div className="clearfix"></div>
                                 </div>
                             </Link>
@@ -73,23 +80,22 @@ class ClassList extends Component {
             case 'lecturer':
                 listClass = this.props.listClass.map((subject, index) =>
                     <div key={index} className="col-lg-3 col-md-6">
-                        <div className="panel panel-green">
+                        <div className="panel panel-primary">
                             <div className="panel-heading">
                                 <div className="row">
                                     <div className="col-xs-3">
                                         <i className="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div className="col-xs-9 text-right">
-                                        <div className="huge">{subject.classId}</div>
-                                        <div>Năm học: {subject.semester_id}</div>
+                                        <div><h3>{subject.classId}</h3></div>
+                                        <div>Năm học: 2018</div>
                                     </div>
                                     <div className="col-xs-12 text-right">{subject.className}</div>
                                 </div>
                             </div>
                             <Link to={"/infoClass" + subject.classId.replace(/\s/g, '')}>
                                 <div className="panel-footer">
-                                    <span className="pull-left">Xem chi tiết</span>
-                                    <span className="pull-right"><i className="fa fa-arrow-circle-right"></i></span>
+                                    <span className="pull-right">Xem chi tiết <i className="fa fa-eye"></i></span>
                                     <div className="clearfix"></div>
                                 </div>
                             </Link>
@@ -97,6 +103,7 @@ class ClassList extends Component {
                     </div>
                 );
                 break;
+            default: break;
         };
 
         return (

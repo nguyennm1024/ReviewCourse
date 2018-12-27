@@ -23,7 +23,7 @@ class Login extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        this.Auth.login(this.state.user, this.state.password)
+        this.Auth.login(this.state.user + "@vnu.edu.vn", this.state.password)
             .then(res => {
                 this.props.history.replace('/')
             })
@@ -44,10 +44,7 @@ class Login extends Component {
                             <h3 className="panel-title">Vui lòng đăng nhập</h3>
                         </div>
                         <div className="panel-body">
-                            <form
-                                role="form"
-                                onSubmit={this.handleSubmit}
-                            >
+                            <form onSubmit={this.handleSubmit}>
                                 <fieldset>
                                     <div className="form-group">
                                         <input
@@ -57,7 +54,7 @@ class Login extends Component {
                                             type="text" 
                                             onChange={this.handleChange}
                                             autoFocus={true} 
-                                            value={this.state.user}
+                                            // value={this.state.user}
                                         />
                                     </div>
                                     <div className="form-group">
@@ -67,7 +64,7 @@ class Login extends Component {
                                             name="password"
                                             type="password" 
                                             onChange={this.handleChange}
-                                            value={this.state.password}
+                                            // value={this.state.password}
                                         />
                                     </div>
                                     <div className="checkbox">

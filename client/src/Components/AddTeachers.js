@@ -1,14 +1,42 @@
 import React, { Component } from 'react';
 import XLSX from 'xlsx';
+import Modal from './Modal';
+import FormTeacher from './FormTeacher';
 
 const API_addTeacher = "http://localhost:5000/api/admin/createLecturer";
 
 class AddTeachers extends Component {
     constructor(props) {
         super(props);
-        this.state = { teachers: [] };
+        this.state = {
+            toggle: false,
+            teachers: [],
+            tempTeacher: null,
+            checkedTempTeacher: false
+        };
         this.addFromExcel = this.addFromExcel.bind(this);
         this.addTeachers = this.addTeachers.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.addTeacherByHand = this.addTeacherByHand.bind(this);
+        this.handleTeacherFromReport = this.handleTeacherFromReport.bind(this);
+    }
+
+    toggle() {
+        this.setState({ toggle: !this.state.toggle });
+    }
+
+    handleTeacherFromReport(teacher) {
+        this.setState({ tempTeacher: teacher });
+    }
+
+    addTeacherByHand() {
+        if (this.state.tempTeacher !== undefined) {
+            this.setState({
+                teachers: [...this.state.teachers, this.state.tempTeacher],
+                tempTeacher: null,
+            })
+            this.toggle();
+        }
     }
 
     addFromExcel(event) {
@@ -24,7 +52,7 @@ class AddTeachers extends Component {
                 let teacher = {
                     userName: worksheet[XLSX.utils.encode_cell({ c: 1, r: row })].v,
                     password: worksheet[XLSX.utils.encode_cell({ c: 2, r: row })].v.toString(),
-                    name: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
+                    lecturerName: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
                     mail: worksheet[XLSX.utils.encode_cell({ c: 4, r: row })].v,
                 };
                 this.setState({ teachers: [...this.state.teachers, teacher] });
@@ -47,23 +75,23 @@ class AddTeachers extends Component {
                 body: JSON.stringify({
                     'mail': list[i].userName + '@vnu.edu.vn',
                     'password': list[i].password,
-                    'lecturerName': list[i].name,
+                    'lecturerName': list[i].lecturerName,
                     'semester_id': 1,
                 })
             })
-            .then(response => response.json())
-            .then(response => console.log(response))
-            .catch(err => console.log("loi" + err));
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.log("loi" + err));
         }
     }
 
+    handle
     render() {
         let listTeachers = this.state.teachers.map((teacher, index) =>
             <tr key={teacher.userName}>
                 <td>{index + 1}</td>
                 <td>{teacher.userName}</td>
-                {/* <td>{teacher.password}</td> */}
-                <td>{teacher.name}</td>
+                <td className="td-name">{teacher.lecturerName}</td>
                 <td>{teacher.mail}</td>
             </tr>
         );
@@ -75,26 +103,26 @@ class AddTeachers extends Component {
                     <div className="col-lg-12">
                         <div className="panel panel-default">
                             <div className="panel-heading clearfix">
-<div className="btn-group pull-left">
-                            <label className="btn btn-primary btn-file">
-                                    Thêm thủ công
+                                <div className="btn-group pull-left">
+                                    <label className="btn btn-primary btn-file">
+                                        Thêm thủ công
                                     <input
-                                        type="file"
-                                        onChange={this.addFromExcel}
-                                        style={{ display: "none", }}
-                                    />
-                                </label>
+                                            type="button"
+                                            onClick={this.toggle}
+                                            style={{ display: "none", }}
+                                        />
+                                    </label>
                                 </div>
 
                                 <div className="btn-group pull-right">
-                                <label className="btn btn-primary btn-file">
-                                    Thêm từ tệp Excel
+                                    <label className="btn btn-primary btn-file">
+                                        Thêm từ tệp Excel
                                     <input
-                                        type="file"
-                                        onChange={this.addFromExcel}
-                                        style={{ display: "none", }}
-                                    />
-                                </label>
+                                            type="file"
+                                            onChange={this.addFromExcel}
+                                            style={{ display: "none", }}
+                                        />
+                                    </label>
                                 </div>
                             </div>
 
@@ -112,6 +140,7 @@ class AddTeachers extends Component {
                             <div className="panel-footer">
                                 <button
                                     className="btn btn-primary"
+                                    disabled={this.state.teachers.length === 0 ? true : false}
                                     onClick={this.addTeachers}
                                 >
                                     Thêm giảng viên
@@ -120,6 +149,18 @@ class AddTeachers extends Component {
                         </div>
                     </div>
                 </div>
+
+                {this.state.toggle ? <Modal 
+                    component_1={<FormTeacher sendTeacherToList={this.handleTeacherFromReport} />}
+                    changeToggle={this.toggle}
+                    size="modal-md"
+                    action_1={this.toggle}
+                    actionName_1="Hủy"
+                    action_2={this.addTeacherByHand}
+                    isDisabledAction={this.state.checkedTempTeacher}
+                    actionName_2="Thêm vào danh sách"
+                    title="Thông tin giảng viên"
+                /> : <div />}
             </div>
         )
     }

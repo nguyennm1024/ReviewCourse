@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PageWrapper from './PageWrapper';
-import decode from 'jwt-decode';
 import AuthService from './AuthService';
-import { Modal, Button } from 'react-bootstrap';
 import Sidebar from './Sidebar';
 
 class Home extends Component {

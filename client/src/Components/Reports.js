@@ -25,6 +25,7 @@ class Reports extends Component {
             subject_id: "",
             className: "",
             disabled: localStorage.getItem('role') === 'admin' ? true : false,
+            sendSuccess: false,
             dataReport: {
                 giangDuong: null,
                 trangThietBi: null,
@@ -68,7 +69,6 @@ class Reports extends Component {
         })
             .then(response => response.json())
             .then(response => {
-                console.log(response);
                 delete response.class_id;
                 delete response.semester_id;
                 delete response.student_id;
@@ -82,6 +82,7 @@ class Reports extends Component {
     }
 
     handleChange(event) {
+        this.setState({ sendSuccess: false });
         let target = event.target;
         let value = target.value;
         let name = target.name;
@@ -94,7 +95,6 @@ class Reports extends Component {
     }
 
     async postReport() {
-        // console.log(this.props);
         console.log(this.state.dataReport);
         let token = localStorage.getItem('id_token');
         await fetch(API_postReport, {
@@ -113,6 +113,7 @@ class Reports extends Component {
             .then(response => response.json())
             .then(response => {
                 console.log(response);
+                this.setState({ sendSuccess: true });
             })
             .catch(err => console.log("Loi:" + err));
     }
@@ -120,7 +121,7 @@ class Reports extends Component {
     render() {
         let listSurveys = Object.getOwnPropertyNames(this.state.dataReport).map(survey =>
             <tr key={survey}>
-                <td>{KeyValue[survey]}</td>
+                <td className="td-name">{KeyValue[survey]}</td>
                 <td>
                     <input
                         type="radio"
@@ -129,6 +130,7 @@ class Reports extends Component {
                         onChange={this.handleChange}
                         checked={this.state.dataReport[survey] === 1}
                         disabled={this.state.disabled}
+                        style={{cursor: "pointer"}}
                     />
                 </td>
                 <td>
@@ -139,6 +141,7 @@ class Reports extends Component {
                         onChange={this.handleChange}
                         checked={this.state.dataReport[survey] === 2}
                         disabled={this.state.disabled}
+                        style={{cursor: "pointer"}}
                     />
                 </td>
                 <td>
@@ -149,6 +152,7 @@ class Reports extends Component {
                         onChange={this.handleChange}
                         checked={this.state.dataReport[survey] === 3}
                         disabled={this.state.disabled}
+                        style={{cursor: "pointer"}}
                     />
                 </td>
                 <td>
@@ -159,6 +163,7 @@ class Reports extends Component {
                         onChange={this.handleChange}
                         checked={this.state.dataReport[survey] === 4}
                         disabled={this.state.disabled}
+                        style={{cursor: "pointer"}}
                     />
                 </td>
                 <td>
@@ -169,6 +174,7 @@ class Reports extends Component {
                         onChange={this.handleChange}
                         checked={this.state.dataReport[survey] === 5}
                         disabled={this.state.disabled}
+                        style={{cursor: "pointer"}}
                     />
                 </td>
             </tr>
@@ -196,13 +202,15 @@ class Reports extends Component {
 
                         {
                             localStorage.getItem('role') === 'student'
-                            ? <div className="panel-footer">
-                                <button 
-                                    className="btn btn-default"
-                                    onClick={this.postReport}
-                                >
-                                    Gửi đánh giá
-                                </button>
+                            ? <div className="panel-footer text-center">
+                                {this.state.sendSuccess ? <div className="alert alert-success">Bạn đã đánh giá thành công</div>
+                                : <button 
+                                className="btn btn-default"
+                                onClick={this.postReport}
+                            >
+                                Gửi đánh giá
+                            </button>    
+                            }
                             </div>
                             : <div />
                         }

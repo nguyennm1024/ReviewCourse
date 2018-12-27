@@ -59,7 +59,7 @@ class AddTeachers extends Component {
                 <td>{index + 1}</td>
                 <td>{teacher.userName}</td>
                 {/* <td>{teacher.password}</td> */}
-                <td>{teacher.name}</td>
+                <td className="td-name">{teacher.name}</td>
                 <td>{teacher.mail}</td>
             </tr>
         );
@@ -94,6 +94,7 @@ class AddTeachers extends Component {
                                 <button
                                     className="btn btn-primary"
                                     onClick={this.deleteTeachers}
+                                    disabled={this.state.teachers.length === 0 ? true : false}
                                 >
                                     Xóa giảng viên
                                 </button>

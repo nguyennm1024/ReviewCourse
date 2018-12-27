@@ -1,27 +1,26 @@
 import React, { Component } from 'react';
 
-class FormStudent extends Component {
+class FormTeacher extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: this.props.student !== undefined ? this.props.student.MSSV : "",
-            password: this.props.student !== undefined ? this.props.student.password : "",
-            name: this.props.student !== undefined ? this.props.student.studentName : "",
-            classRoom: this.props.student !== undefined ? this.props.student.classRoom : ""
+            userName: this.props.teacher !== undefined ? this.props.teacher.mail.split("@")[0] : "",
+            password: this.props.teacher !== undefined ? this.props.teacher.password : "",
+            name: this.props.teacher !== undefined ? this.props.teacher.lecturerName : "",
         };
         this.handleChange = this.handleChange.bind(this);
-        this.sendStudentToList = this.sendStudentToList.bind(this);
+        this.sendTeacherToList = this.sendTeacherToList.bind(this);
         // this.validation = this.validation.bind(this);
     }
 
-    sendStudentToList() {
-        if (this.props.sendStudentToList !== undefined) {
-            this.props.sendStudentToList({
-                MSSV: this.state.userName,
+    sendTeacherToList() {
+        if (this.props.sendTeacherToList !== undefined) {
+            this.props.sendTeacherToList({
+                userName: this.state.userName,
                 password: this.state.password,
-                studentName: this.state.name,
+                lecturerName: this.state.name,
                 mail: this.state.userName + '@vnu.edu.vn',
-                classRoom: this.state.classRoom,
+                // checked: this.validation()
             });
         }
     }
@@ -37,16 +36,15 @@ class FormStudent extends Component {
         return (
             <form>
                 <div className="input-group col-lg-10 col-lg-offset-1">
-                    <span className="label label-default">Tên đăng nhập/MSSV</span>
+                    <span className="label label-default">Tên đăng nhập</span>
                     <input
                         className="form-control"
                         name="userName"
                         type="text"
                         onChange={this.handleChange}
                         autoFocus
-                        placeholder="MSSV phải có 8 chữ số"
                         value={this.state.userName}
-                        onBlur={this.sendStudentToList}
+                        onBlur={this.sendTeacherToList}
                     />
                 </div>
                 
@@ -58,10 +56,9 @@ class FormStudent extends Component {
                         type="password"
                         onChange={this.handleChange}
                         value={this.state.password}
-                        onBlur={this.sendStudentToList}
+                        onBlur={this.sendTeacherToList}
                     />
                 </div>
-
                 <div className="input-group col-lg-10 col-lg-offset-1">
                     <span className="label label-default">Họ tên</span>
                     <input
@@ -70,19 +67,7 @@ class FormStudent extends Component {
                         type="text"
                         onChange={this.handleChange}
                         value={this.state.name}
-                        onBlur={this.sendStudentToList}
-                    />
-                </div>
-
-                <div className="input-group col-lg-10 col-lg-offset-1">
-                    <span className="label label-default">Khóa đào tạo</span>
-                    <input
-                        className="form-control"
-                        name="classRoom"
-                        type="text"
-                        onChange={this.handleChange}
-                        value={this.state.classRoom}
-                        onBlur={this.sendStudentToList}
+                        onBlur={this.sendTeacherToList}
                     />
                 </div>
             </form>
@@ -90,4 +75,4 @@ class FormStudent extends Component {
     }
 }
 
-export default FormStudent;
+export default FormTeacher;

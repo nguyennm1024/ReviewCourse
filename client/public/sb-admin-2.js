@@ -33,7 +33,7 @@ $(function() {
     // var element = $('ul.nav a').filter(function() {
     //     return this.href == url;
     // }).addClass('active').parent().parent().addClass('in').parent();
-    var element = $('ul.nav a').filter(function() {
+    var element = $('ul.nav Link').filter(function() {
         return this.href == url;
     }).addClass('active').parent();
 

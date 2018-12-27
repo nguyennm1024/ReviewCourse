@@ -130,7 +130,7 @@ const updateInfoLecturer = (req, res) => {
     Lecturer.findOne({mail}, (err, lecturer) =>{
         if(err) return res.status(400).json({err});
         if(!lecturer) return res.status(400).json({message: 'no lecturer founded'});
-
+        lecturer.lecturerName = lecturerName;
         lecturer.mail =mail;
         lecturer.birthday = birthday;
         lecturer.phoneNumber = phoneNumber;

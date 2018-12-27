@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -18,10 +18,10 @@ class Sidebar extends Component {
     render() {
         switch (localStorage.getItem('role')) {
             case 'admin': return (
-                <div className="navbar-default sidebar" style={{position: 'fixed'}}>
-                    <div className="sidebar-nav navbar-collapse">
+                <div className="navbar-default sidebar" style={{ position: 'fixed' }}>
+                    <div className="sidebar-nav navbar-collapse collapse">
                         <Avatar name='Admin' />
-                        <ul className="nav" id="side-menu" hidden={false}>
+                        <ul className="nav" id="side-menu" >
                             <li>
                                 <Link to="/dashboard"><i className="fa fa-dashboard"></i> Khảo sát</Link>
                             </li>
@@ -36,51 +36,57 @@ class Sidebar extends Component {
 
                             <li>
                                 <button
-                                    className="btn btn-link logout-buttonr"
+                                    className="btn btn-info btn-sm button-logout"
                                     onClick={this.logout}
+                                    style={{ position: "fixed" }}
                                 >
-                                    Đăng xuất
+                                    <span className="fa fa-sign-out"></span> Đăng xuất
                                 </button>
+
                             </li>
                         </ul>
                     </div>
                 </div>
             );
             case 'student': return (
-                <div className="navbar-default sidebar" style={{position: 'fixed'}}>
+                <div className="navbar-default sidebar" style={{ position: 'fixed' }}>
                     <div className="sidebar-nav navbar-collapse">
                         <Avatar name={localStorage.getItem('userName')} />
                         <ul className="nav" id="side-menu" hidden={false}>
                             <li>
-
                                 <button
-                                    className="btn btn-link logout-buttonr"
+                                    className="btn btn-info btn-sm button-logout"
                                     onClick={this.logout}
+                                    style={{ position: "fixed" }}
                                 >
-                                    Đăng xuất
-                            </button>
+                                    <span className="fa fa-sign-out"></span> Đăng xuất
+                                </button>
+
                             </li>
                         </ul>
                     </div>
                 </div>
             );
             case 'lecturer': return (
-                <div className="navbar-default sidebar" style={{position: 'fixed'}}>
+                <div className="navbar-default sidebar" style={{ position: 'fixed' }}>
                     <div className="sidebar-nav navbar-collapse">
                         <Avatar name={localStorage.getItem('userName')} />
                         <ul className="nav" id="side-menu" hidden={false}>
                             <li>
                                 <button
-                                    className="btn btn-link logout-buttonr"
+                                    className="btn btn-info btn-sm button-logout"
                                     onClick={this.logout}
+                                    style={{ position: "fixed" }}
                                 >
-                                    Đăng xuất
-                            </button>
+                                    <span className="fa fa-sign-out"></span> Đăng xuất
+                                </button>
+
                             </li>
                         </ul>
                     </div>
                 </div>
             );
+            default: break;
         }
     }
 }
@@ -103,8 +109,8 @@ const Dropdown = props =>
 
 const Avatar = props =>
     <li style={{ listStyleType: 'none' }}>
-        <div className="panel panel-default text-center">
-            <i className="fa fa-user fa-5x"></i>
+        <div className="panel panel-default text-center avatar">
+            <i className="fa fa-user fa-5x person"></i>
             <div className="panel-header">
                 <h4>{props.name}</h4>
             </div>

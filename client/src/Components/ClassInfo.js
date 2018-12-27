@@ -10,19 +10,26 @@ class ClassInfo extends Component {
         super(props);
         this.state = {
             className: this.props.className,
-            semester_id: null,
+            semester_id: 1,
             teacherName: "",
             classId: "",
             listStudent: [],
-            toggle: false,
+            firstToggle: false,
+            secondToggle: false,
             studentSelected: null,
+            resetSuccess: false,
         }
-        this.toggle = this.toggle.bind(this);
+        this.firstToggle = this.firstToggle.bind(this);
+        this.secondToggle = this.secondToggle.bind(this);
         this.setReportToDefault = this.setReportToDefault.bind(this);
     }
 
-    toggle() {
-        this.setState({ toggle: !this.state.toggle });
+    firstToggle() {
+        this.setState({ firstToggle: !this.state.firstToggle });
+    }
+
+    secondToggle() {
+        this.setState({ secondToggle: !this.state.secondToggle });
     }
 
     async setReportToDefault() {
@@ -39,7 +46,11 @@ class ClassInfo extends Component {
             })
         })
             .then(response => response.json())
-            .then(response => console.log(response))
+            .then(response => {
+                this.setState({ resetSuccess: true });
+                this.secondToggle();
+                this.firstToggle();
+            })
             .catch(err => console.log("Loi" + err));
     }
 
@@ -57,10 +68,9 @@ class ClassInfo extends Component {
             .then(response => response.json())
             .then(response => {
                 this.setState({
-                    // className: response.className,
                     semester_id: localStorage.getItem('role') === 'admin' 
                         ? response.lecturer.semester_id
-                        : response.semester_id,
+                        : 1,
                     classId: response.semantic_class_id,
                     teacherName: localStorage.getItem('role') === 'admin' 
                         ? response.lecturer.lecturerName
@@ -74,13 +84,11 @@ class ClassInfo extends Component {
                     }))
                 })
                 localStorage.setItem('teacherName', this.state.teacherName);
-                // console.log(this.state);
             })
             .catch(error => console.log('Loi', error));
     }
 
     render() {
-        console.log(this.state.toggle);
         let listStudents;
         switch (localStorage.getItem('role')) {
             case 'admin':
@@ -88,18 +96,18 @@ class ClassInfo extends Component {
                     <tr key={student.MSSV}>
                         <td>{index + 1}</td>
                         <td>{student.MSSV}</td>
-                        <td>{student.name}</td>
+                        <td className="td-name">{student.name}</td>
                         <td>{student.birth}</td>
                         <td>{student.classRoom}</td>
                         <td>
                             <button
                                 className="btn btn-secondary"
                                 onClick={ () => this.setState({
-                                    toggle: !this.state.toggle,
+                                    firstToggle: !this.state.firstToggle,
                                     studentSelected: student._id
                                 })}
                             >
-                                Phiếu
+                                Đánh giá
                             </button>
                         </td>
                     </tr>
@@ -110,22 +118,22 @@ class ClassInfo extends Component {
                     <tr key={student.MSSV}>
                         <td>{index + 1}</td>
                         <td>{student.MSSV}</td>
-                        <td>{student.name}</td>
+                        <td className="td-name">{student.name}</td>
                         <td>{student.birth}</td>
                         <td>{student.classRoom}</td>
                     </tr>
                 );
                 break;
+                default: break;
         };
 
         return (
-            <div className={this.state.toggle ? "modal-open" : ""}>
+            <div className={this.state.firstToggle ? "modal-open" : ""}>
                 <div className="row">
                     <div className="col-lg-12 page-header">
                         <h3>{this.state.className} {this.state.classId}</h3><br />
-                        Năm học: {this.state.semester_id}<br />
-                        Giảng viên: {this.state.teacherName}<br />
-                        {/* Lớp môn học:  */}
+                        Năm học: {this.state.semester_id + 2016} - {this.state.semester_id + 2017}<br />
+                        {localStorage.getItem('role') === 'admin' ? <p>Giảng viên: {this.state.teacherName}<br /></p> : ""}
                     </div>
                 </div>
                 <div className="row">
@@ -149,15 +157,29 @@ class ClassInfo extends Component {
                     </div>
                 </div>
 
-                {this.state.toggle ? <Modal
-                    component={<Reports 
+                {this.state.firstToggle ? <Modal
+                    component_1={<Reports 
                         _id={this.props._id}
                         student_id={this.state.studentSelected}
                         className={this.state.className}
                     />}
-                    changeToggle={this.toggle}
-                    action={this.setReportToDefault}
-                    actionName={"Đặt mặc định"}
+                    component_2={<Modal 
+                        component_1={<p className="text-center">Xác nhận đặt lại mặc định</p>}
+                        size="modal-sm"
+                        changeToggle={this.secondToggle}
+                        action_1={this.secondToggle}
+                        actionName_1="Hủy"
+                        action_2={this.setReportToDefault}
+                        actionName_2="Xác nhận"
+                        title="Chú ý"
+                    />}
+                    size="modal-lg"
+                    changeToggle={this.firstToggle}
+                    action_1={this.firstToggle}
+                    actionName_1="OK"
+                    action_2={this.secondToggle}
+                    secondToggle={this.state.secondToggle}
+                    actionName_2="Đặt mặc định"
                     title={this.state.className}
                     /> : <div />
                 }
@@ -172,7 +194,7 @@ const HeaderTable = () => {
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Mã SV</th>
+                    <th>MSSV</th>
                     <th>Họ và tên</th>
                     <th>Ngày sinh</th>
                     <th>Lớp khóa học</th>
@@ -191,6 +213,7 @@ const HeaderTable = () => {
                 </tr>
             </thead>
         );
+        default: break;
     }
 }
 export default ClassInfo;

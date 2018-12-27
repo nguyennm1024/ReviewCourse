@@ -11,7 +11,6 @@ import DeleteStudents from './DeleteStudents';
 import DeleteTeachers from './DeleteTeachers';
 import SurveyResult from './SurveyResult';
 import Reports from './Reports';
-// import './page.css';
 
 class PageWrapper extends Component {
     constructor(props) {
@@ -72,6 +71,8 @@ class PageWrapper extends Component {
                                         class_id={result._id}
                                         subject_id={result.classId.split(' ')[0]}
                                         semester_id={result.semester_id}
+                                        totalStudent={this.state.list.length}
+                                        className={result.className}
                                     />
                                 }
                             />
@@ -138,6 +139,8 @@ class PageWrapper extends Component {
                                         class_id={result._id}
                                         subject_id={result.classId.split(' ')[0]}
                                         semester_id={result.semester_id}
+                                        totalStudent={this.state.list.length}
+                                        className={result.className}
                                     />
                                 }
                             />
@@ -146,6 +149,7 @@ class PageWrapper extends Component {
                     </Switch>
                 </div>
             );
+            default: break;
         }
     }
 }

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
 import XLSX from 'xlsx';
-import Reports from './Reports';
 
 const API_addClassSurvey = "http://localhost:5000/api/admin/createReport";
 
@@ -15,18 +13,16 @@ class AddClassSurveys extends Component {
             teacherName: "",
             teacherId: 0,
             listStudent: [],
-            toggle: false,
         };
         this.addFromExcel = this.addFromExcel.bind(this);
         this.addClassSurvey = this.addClassSurvey.bind(this);
-        this.toggle = this.toggle.bind(this);
     }
 
     async addClassSurvey() {
         let token = localStorage.getItem("id_token");
         let list = this.state.listStudent;
         for (let i = 0; i < list.length; i++) {
-            const response = await fetch(API_addClassSurvey, {
+            await fetch(API_addClassSurvey, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,16 +39,22 @@ class AddClassSurveys extends Component {
                     'classRoom': list[i].classRoom,
                     'semester_id': 1,
                     'studentName': list[i].name,
-                    'lecturerName': this.state.teacherName,
                 })
             })
-            response = response.json();
-            console.log(response);
+            // response = response.json();
+            // console.log(response);
         }
-        // alert('huhu');
     }
 
     addFromExcel(event) {
+        this.setState({
+            subject_id: "",
+            semester_id: null,
+            name: "",
+            teacherName: "",
+            teacherId: 0,
+            listStudent: [],
+        });
         event.preventDefault();
         let file = event.target.files[0];
         let reader = new FileReader();
@@ -78,11 +80,8 @@ class AddClassSurveys extends Component {
                 this.setState({ listStudent: [...this.state.listStudent, student] });
             }
         }
+        
         reader.readAsBinaryString(file);
-    }
-
-    toggle() {
-        this.setState({ toggle: !this.state.toggle });
     }
 
     render() {
@@ -90,7 +89,7 @@ class AddClassSurveys extends Component {
             <tr key={student.MSSV}>
                 <td>{index + 1}</td>
                 <td>{student.MSSV}</td>
-                <td>{student.name}</td>
+                <td className="td-name">{student.name}</td>
                 <td>{student.birth}</td>
                 <td>{student.classRoom}</td>
             </tr>
@@ -133,6 +132,7 @@ class AddClassSurveys extends Component {
                                         value="Thêm lớp khảo sát"
                                         className="btn btn-primary"
                                         onClick={this.addClassSurvey}
+                                        disabled={this.state.listStudent.length === 0 ? true : false}
                                     />
                                 </div>
                             </div>
@@ -154,7 +154,7 @@ const headerTable = (
     <thead>
         <tr>
             <th>STT</th>
-            <th>Mã SV</th>
+            <th>MSSV</th>
             <th>Họ và tên</th>
             <th>Ngày sinh</th>
             <th>Lớp khóa học</th>

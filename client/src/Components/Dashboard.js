@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import ClassList from './ClassList';
 import { Link } from 'react-router-dom';
-import ClassInfo from './ClassInfo';
-import decode from 'jwt-decode';
-import Reports from './Reports';
+import Modal from './Modal';
 
-const StartSemester = 2018;
+const API_deleteClassSurvey = "http://localhost:5000/api/admin/deleteSurvey";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -14,7 +12,42 @@ class Dashboard extends Component {
             semester_id: 1,
             listClass: [],
             idUser: localStorage.getItem('id_user'),
+            toggle: false,
+            classSelected: "",
         };
+        this.toggle = this.toggle.bind(this);
+        this.handleIdClass = this.handleIdClass.bind(this);
+        this.deleteClassSurvey = this.deleteClassSurvey.bind(this);
+    }
+
+    toggle() {
+        this.setState({ toggle: !this.state.toggle });
+    }
+
+    handleIdClass(idClass) {
+        this.setState({ classSelected: idClass });
+    }
+
+    deleteClassSurvey() {
+        let token = localStorage.getItem('id_token');
+        fetch(API_deleteClassSurvey, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                'class_id': this.state.classSelected
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                let newClassListState = this.state.listClass.filter( (_class) => _class._id !== this.state.classSelected);
+                this.setState({ listClass: newClassListState });
+                this.toggle();
+                this.forceUpdate();
+            })
+            .catch(err => console.log("Loi" + err));
     }
 
     componentDidMount() {
@@ -65,10 +98,9 @@ class Dashboard extends Component {
                             <div className="page-header">
                                 <h1>Các lớp khảo sát</h1>
                                 <div className="row">
-                                    <SemesterDropdown className="text-left" />
                                     <div className="text-right">
                                         <Link to="/addClassSurvey">
-                                            <button className="btn btn-success">
+                                            <button className="btn btn-primary">
                                                 Thêm lớp khảo sát
                                             </button>
                                         </Link>
@@ -77,7 +109,23 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </div>
-                    <ClassList listClass={this.state.listClass} />
+
+                    <ClassList 
+                        listClass={this.state.listClass} 
+                        changeToggle={this.toggle}
+                        sendIdClass={this.handleIdClass}
+                    />
+
+                    {this.state.toggle ? <Modal 
+                        component_1={<p className="text-center">Xác nhận xóa lớp khảo sát</p>}
+                        changeToggle={this.toggle}
+                        size="modal-sm"
+                        action_1={this.toggle}
+                        actionName_1="Hủy"
+                        action_2={this.deleteClassSurvey}
+                        actionName_2="Xác nhận"
+                        title="Chú ý"
+                    /> : ""}
                 </div>
             );
             case 'student': return (
@@ -86,7 +134,6 @@ class Dashboard extends Component {
                         <div className="col-lg-12">
                             <div className="page-header">
                                 <h1>Các lớp khảo sát</h1>
-                                <SemesterDropdown className="text-left" />
                             </div>
                         </div>
                     </div>
@@ -99,28 +146,15 @@ class Dashboard extends Component {
                         <div className="col-lg-12">
                             <div className="page-header">
                                 <h1>Các lớp khảo sát</h1>
-                                <SemesterDropdown className="text-left" />
                             </div>
                         </div>
                     </div>
                     <ClassList listClass={this.state.listClass}/>
                 </div>
             );
+            default: break;
         };
     }
 }
-
-const SemesterDropdown = () => (
-    <div className="dropdown">
-        <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            Năm học{' '}
-            <span className="caret"></span>
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><Link to="/201820191">2018-2019-HKI</Link></li>
-            <li><Link to="/201720182">2017-2018-HKII</Link></li>
-        </ul>
-    </div>
-);
 
 export default Dashboard;

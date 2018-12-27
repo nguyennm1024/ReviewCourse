@@ -45,7 +45,7 @@ class DeleteStudents extends Component {
                 let student = {
                     MSSV: worksheet[XLSX.utils.encode_cell({ c: 1, r: row })].v,
                     password: worksheet[XLSX.utils.encode_cell({ c: 2, r: row })].v,
-                    name: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
+                    studentName: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
                     mail: worksheet[XLSX.utils.encode_cell({ c: 4, r: row })].v,
                     classRoom: worksheet[XLSX.utils.encode_cell({ c: 5, r: row })].v,
                 };
@@ -61,7 +61,7 @@ class DeleteStudents extends Component {
                 <td>{index + 1}</td>
                 <td>{student.MSSV}</td>
                 {/* <td>{student.password}</td> */}
-                <td>{student.name}</td>
+                <td className="td-name">{student.studentName}</td>
                 <td>{student.mail}</td>
                 <td>{student.classRoom}</td>
             </tr>
@@ -97,6 +97,7 @@ class DeleteStudents extends Component {
                                 <button
                                     className="btn btn-primary"
                                     onClick={this.deleteStudents}
+                                    disabled={this.state.students.length === 0 ? true : false}
                                 >
                                     Xóa sinh viên
                                 </button>
@@ -120,7 +121,7 @@ const headerTable = (
     <thead>
         <tr>
             <th>STT</th>
-            <th>MSV/Tên đăng nhập</th>
+            <th>MSSV/Tên đăng nhập</th>
             {/* <th>Mật khẩu</th> */}
             <th>Họ và tên</th>
             <th>VNU email</th>

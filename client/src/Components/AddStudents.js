@@ -3,7 +3,6 @@ import XLSX from 'xlsx';
 import Modal from './Modal';
 import FormStudent from './FormStudent';
 
-
 const API_addStudent = 'http://localhost:5000/api/admin/createStudent';
 
 class AddStudents extends Component {
@@ -11,16 +10,44 @@ class AddStudents extends Component {
     super(props);
     this.state = {
       toggle: false,
-      students: []
+      students: [],
+      tempStudent: null,
+      checkedTempStudent: false,
     };
 
     this.addFromExcel = this.addFromExcel.bind(this);
     this.addStudents = this.addStudents.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.addStudentByHand = this.addStudentByHand.bind(this);
+    this.handleStudentFromReport = this.handleStudentFromReport.bind(this);
+    this.validation = this.validation.bind(this);
+  }
+
+  validation() {
+    if (!!this.state.tempStudent
+        && /^\(|\)|\d{8}$/.test(this.state.tempStudent.userName) 
+        && !!this.state.tempStudent.password 
+        && !!this.state.tempStudent.name) this.setState({ checkedTempStudent: true });
   }
 
   toggle() {
     this.setState({ toggle: !this.state.toggle });
+  }
+
+  handleStudentFromReport(student){
+    // console.log(this.state.tempStudent);
+    this.setState({ tempStudent: student });
+    this.validation();
+  }
+
+  addStudentByHand() {
+    if (this.state.tempStudent !== undefined) {
+      this.setState({ 
+        students: [...this.state.students, this.state.tempStudent],
+        tempStudent: null,
+      });
+      this.toggle();
+    }
   }
 
   addFromExcel(event) {
@@ -36,7 +63,7 @@ class AddStudents extends Component {
         let student = {
           MSSV: worksheet[XLSX.utils.encode_cell({ c: 1, r: row })].v,
           password: worksheet[XLSX.utils.encode_cell({ c: 2, r: row })].v,
-          name: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
+          studentName: worksheet[XLSX.utils.encode_cell({ c: 3, r: row })].v,
           mail: worksheet[XLSX.utils.encode_cell({ c: 4, r: row })].v,
           classRoom: worksheet[XLSX.utils.encode_cell({ c: 5, r: row })].v,
         };
@@ -51,7 +78,7 @@ class AddStudents extends Component {
     let list = this.state.students;
 
     for (let i = 0; i < list.length; i++) {
-      const response = await fetch(API_addStudent, {
+      await fetch(API_addStudent, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -61,30 +88,22 @@ class AddStudents extends Component {
           'MSSV': list[i].MSSV,
           'mail': list[i].MSSV + '@vnu.edu.vn',
           'password': list[i].password,
-          'studentName': list[i].name,
+          'studentName': list[i].studentName,
           'classRoom': list[i].classRoom,
           'semester_id': 1,
         })
       })
-      response = response.json();
+      // response = response.json();
     }
 
   }
 
-  handleChange(e) {
-    let target = e.target
-    let name = target.name;
-    let value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({ [name]: value });
-  }
-
   render() {
     let listStudents = this.state.students.map((student, index) =>
-      <tr key={student.MSSV}>
+      <tr key={index + 1}>
         <td>{index + 1}</td>
         <td>{student.MSSV}</td>
-        <td>{student.password}</td>
-        <td>{student.name}</td>
+        <td className="td-name">{student.studentName}</td>
         <td>{student.mail}</td>
         <td>{student.classRoom}</td>
       </tr>
@@ -130,6 +149,7 @@ class AddStudents extends Component {
               <div className="panel-footer">
                 <button
                   className="btn btn-primary"
+                  disabled={this.state.students.length === 0 ? true : false}
                   onClick={this.addStudents}
                 >
                   Thêm sinh viên
@@ -140,13 +160,15 @@ class AddStudents extends Component {
         </div>
 
         {this.state.toggle ? <Modal 
-            component={<FormStudent 
-            
-          />}
+            component_1={<FormStudent sendStudentToList={this.handleStudentFromReport} />}
             changeToggle={this.toggle}
-            // action={}
-            actionName={"Thêm vào danh sách"}
-            title={"Thông tin sinh viên"}
+            size="modal-md"
+            action_1={this.toggle}
+            actionName_1="Hủy"
+            action_2={this.addStudentByHand}
+            isDisabledAction={!!this.state.tempStudent ? false : true}
+            actionName_2="Thêm vào danh sách"
+            title="Thông tin sinh viên"
         /> : <div />}
       </div>
     )
@@ -165,58 +187,11 @@ const headerTable = (
     <tr>
       <th>STT</th>
       <th>MSV/Tên đăng nhập</th>
-      <th>Mật khẩu</th>
       <th>Họ và tên</th>
       <th>VNU email</th>
       <th>Khóa đào tạo</th>
     </tr>
   </thead>
 );
-const Input = () =>
-  <tr>
-    <td></td>
-    <td>
-      <input
-        type="text"
-        className="form-control"
-        required={true}
-      // onFocus={true}
-      // onChange={}
-      />
-    </td>
-    <td>
-      <input
-        type="password"
-        className="form-control"
-        required={true}
-      // onDragEnter={nextLine}  
-      // onChange={}
-      />
-    </td>
-    <td>
-      <input
-        type="text"
-        className="form-control"
-        required={true}
-      // onChange={this.handleChange}
-      // onChange={}
-      />
-    </td>
-    <td>
-      <input
-        type="mail"
-        className="form-control"
-        required={false}
-      // onChange={}
-      />
-    </td>
-    <td>
-      <input
-        type="text"
-        className="form-control"
-        required={false}
-      // onChange={}
-      />
-    </td>
-  </tr>
+
 export default AddStudents;
