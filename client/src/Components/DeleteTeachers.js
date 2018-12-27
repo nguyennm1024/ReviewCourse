@@ -5,7 +5,10 @@ const API_deleteTeacher = "http://localhost:5000/api/admin/deleteLecturer";
 class AddTeachers extends Component {
     constructor(props) {
         super(props);
-        this.state = { teachers: [] };
+        this.state = { 
+            teachers: [],
+            deleteSuccess: false,
+         };
         this.deleteFromExcel = this.deleteFromExcel.bind(this);
         this.deleteTeachers = this.deleteTeachers.bind(this);
     }
@@ -48,7 +51,7 @@ class AddTeachers extends Component {
                 })
             }).then(response => response.json())
                 .then(response => {
-                    console.log(response);
+                    if (response.message === "success") this.setState({ deleteSuccess: true });
                 })
         }
     }
@@ -90,14 +93,15 @@ class AddTeachers extends Component {
                                 </table>
                             </div>
 
-                            <div className="panel-footer">
-                                <button
+                            <div className="panel-footer text-center">
+                            {this.state.deleteSuccess ? <div className="alert alert-success">Bạn đã xóa thành công</div>
+                                : <button
                                     className="btn btn-primary"
                                     onClick={this.deleteTeachers}
                                     disabled={this.state.teachers.length === 0 ? true : false}
                                 >
                                     Xóa giảng viên
-                                </button>
+                                </button>}
                             </div>
                         </div>
                     </div>

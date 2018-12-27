@@ -13,6 +13,7 @@ class AddStudents extends Component {
       students: [],
       tempStudent: null,
       checkedTempStudent: false,
+      addSuccess: false,
     };
 
     this.addFromExcel = this.addFromExcel.bind(this);
@@ -95,7 +96,7 @@ class AddStudents extends Component {
       })
       // response = response.json();
     }
-
+    this.setState({ addSuccess: true });
   }
 
   render() {
@@ -146,14 +147,15 @@ class AddStudents extends Component {
                   </tbody>
                 </table>
               </div>
-              <div className="panel-footer">
-                <button
+              <div className="panel-footer text-center">
+                {this.state.addSuccess ? <div className="alert alert-success">Bạn đã thêm thành công</div>
+                : <button
                   className="btn btn-primary"
                   disabled={this.state.students.length === 0 ? true : false}
                   onClick={this.addStudents}
                 >
                   Thêm sinh viên
-                </button>
+                </button>}
               </div>
             </div>
           </div>

@@ -12,7 +12,8 @@ class AddTeachers extends Component {
             toggle: false,
             teachers: [],
             tempTeacher: null,
-            checkedTempTeacher: false
+            checkedTempTeacher: false,
+            addSuccess: false,
         };
         this.addFromExcel = this.addFromExcel.bind(this);
         this.addTeachers = this.addTeachers.bind(this);
@@ -83,6 +84,7 @@ class AddTeachers extends Component {
                 .then(response => console.log(response))
                 .catch(err => console.log("loi" + err));
         }
+        this.setState({ addSuccess: true });
     }
 
     handle
@@ -137,14 +139,15 @@ class AddTeachers extends Component {
                                 </table>
                             </div>
 
-                            <div className="panel-footer">
-                                <button
+                            <div className="panel-footer text-center">
+                            {this.state.addSuccess ? <div className="alert alert-success">Bạn đã thêm thành công</div>
+                               : <button
                                     className="btn btn-primary"
                                     disabled={this.state.teachers.length === 0 ? true : false}
                                     onClick={this.addTeachers}
                                 >
                                     Thêm giảng viên
-                                </button>
+                                </button> }
                             </div>
                         </div>
                     </div>

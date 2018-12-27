@@ -13,6 +13,7 @@ class AddClassSurveys extends Component {
             teacherName: "",
             teacherId: 0,
             listStudent: [],
+            addSuccess: false,
         };
         this.addFromExcel = this.addFromExcel.bind(this);
         this.addClassSurvey = this.addClassSurvey.bind(this);
@@ -44,6 +45,7 @@ class AddClassSurveys extends Component {
             // response = response.json();
             // console.log(response);
         }
+        this.setState({ addSuccess: true })
     }
 
     addFromExcel(event) {
@@ -54,6 +56,7 @@ class AddClassSurveys extends Component {
             teacherName: "",
             teacherId: 0,
             listStudent: [],
+            addSuccess: false,
         });
         event.preventDefault();
         let file = event.target.files[0];
@@ -126,14 +129,15 @@ class AddClassSurveys extends Component {
                                     </table>
                                 </div>
 
-                                <div className="panel-footer">
-                                    <input
+                                <div className="panel-footer text-center">
+                                    {this.state.addSuccess ? <div className="alert alert-success">Thêm lớp khảo sát thành công</div>
+                                    : <input
                                         type="button"
                                         value="Thêm lớp khảo sát"
                                         className="btn btn-primary"
                                         onClick={this.addClassSurvey}
                                         disabled={this.state.listStudent.length === 0 ? true : false}
-                                    />
+                                    />}
                                 </div>
                             </div>
                         </div>
